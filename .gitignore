@@ -4,7 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 compose.yml
-!**/src/main/**/security
+!**/src/main/**/security/*
 
 ### STS ###
 .apt_generated
