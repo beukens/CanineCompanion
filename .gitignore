@@ -4,7 +4,12 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 compose.yml
-!**/src/main/**/security/*
+!**/main/resources/application-dev.yml
+!**/main/resources/application-prod.yml
+!**/main/java/be/yapock/caninecompanion/pl/config/mailing/MailConfig.java
+!**/main/java/be/yapock/caninecompanion/pl/config/security/JWTAuthenticationFilter.java
+!**/main/java/be/yapock/caninecompanion/pl/config/security/JWTProvider.java
+!**/main/java/be/yapock/caninecompanion/pl/config/security/SecurityConfig.java
 
 ### STS ###
 .apt_generated
