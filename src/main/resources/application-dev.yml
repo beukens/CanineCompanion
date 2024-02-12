@@ -1,8 +1,8 @@
-Spring:
+spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/caninecompanion
     username: postgres
-    password: password
+    password: admin
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
