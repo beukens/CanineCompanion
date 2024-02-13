@@ -28,6 +28,11 @@ public class User implements UserDetails {
     private UserRole userRole;
     @Setter
     private boolean isEnabled = true;
+    @Getter
+    @Setter
+    @OneToOne
+    @JoinColumn(name = "person_id")
+    private Person person;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

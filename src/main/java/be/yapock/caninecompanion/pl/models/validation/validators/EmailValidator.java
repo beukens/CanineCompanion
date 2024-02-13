@@ -1,6 +1,6 @@
 package be.yapock.caninecompanion.pl.models.validation.validators;
 
-import be.yapock.caninecompanion.pl.models.PersonForm;
+import be.yapock.caninecompanion.pl.models.person.PersonForm;
 import be.yapock.caninecompanion.pl.models.validation.constraints.ValidEmail;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

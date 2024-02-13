@@ -1,9 +1,8 @@
 package be.yapock.caninecompanion.bll.serviceImpls;
 
-import be.yapock.caninecompanion.bll.PersonService;
 import be.yapock.caninecompanion.dal.models.Person;
 import be.yapock.caninecompanion.dal.repositories.PersonRepository;
-import be.yapock.caninecompanion.pl.models.PersonForm;
+import be.yapock.caninecompanion.pl.models.person.PersonForm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

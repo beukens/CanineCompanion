@@ -1,4 +1,4 @@
-package be.yapock.caninecompanion.pl.models;
+package be.yapock.caninecompanion.pl.models.person;
 
 import be.yapock.caninecompanion.pl.models.validation.constraints.ValidEmail;
 import be.yapock.caninecompanion.pl.models.validation.constraints.ValidPhoneNumber;
