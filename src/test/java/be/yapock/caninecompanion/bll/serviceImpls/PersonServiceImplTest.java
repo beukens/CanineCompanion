@@ -45,4 +45,11 @@ class PersonServiceImplTest {
 
         verify(personRepository, times(1)).save(any(Person.class));
     }
+
+    @Test
+    void create_ko(){
+        Exception exception = assertThrows(IllegalArgumentException.class, ()-> personService.create(null));
+
+        assertEquals("le formulaire ne peut être null", exception.getMessage());
+    }
 }

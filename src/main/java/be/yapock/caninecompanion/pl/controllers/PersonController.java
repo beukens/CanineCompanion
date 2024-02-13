@@ -14,6 +14,11 @@ public class PersonController {
         this.personService = personService;
     }
 
+    /**
+     * Creates a new person by calling the create method of the PersonService.
+     *
+     * @param form the PersonForm object containing the details of the person to be created
+     */
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_HELPER')")
     @PostMapping
     public void create(@RequestBody PersonForm form){
