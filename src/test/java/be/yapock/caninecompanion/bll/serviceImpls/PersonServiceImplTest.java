@@ -12,6 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -99,5 +101,16 @@ class PersonServiceImplTest {
         Exception exception = assertThrows(AccessDeniedException.class, ()-> personService.getOne(1L, authentication));
 
         assertEquals(exception.getMessage(),"Access denied");
+    }
+
+    @Test
+    void getAll_ok(){
+        Pageable pageable = mock(Pageable.class);
+        Page entities = mock(Page.class);
+        when(personRepository.findAll(pageable)).thenReturn(entities);
+
+        Page result = personService.getAll(pageable);
+
+        assertEquals(entities,result);
     }
 }
