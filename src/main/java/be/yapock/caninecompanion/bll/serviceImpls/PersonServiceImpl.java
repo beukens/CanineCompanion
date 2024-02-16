@@ -8,6 +8,8 @@ import be.yapock.caninecompanion.dal.repositories.PersonRepository;
 import be.yapock.caninecompanion.dal.repositories.UserRepository;
 import be.yapock.caninecompanion.pl.models.person.PersonForm;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -60,7 +62,16 @@ public class PersonServiceImpl implements PersonService {
         return personRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("personne pas trouvée"));
     }
 
-
+    /**
+     * Retrieves all the persons from the person repository.
+     *
+     * @param pageable the pageable object to specify pagination parameters
+     * @return a Page object containing the list of persons
+     */
+    @Override
+    public Page<Person> getAll(Pageable pageable) {
+        return personRepository.findAll(pageable);
+    }
 
     /**
      * Checks if the authentication has the necessary authorities to access a person with the given ID.
