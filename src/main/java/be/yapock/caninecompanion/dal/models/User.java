@@ -25,6 +25,7 @@ public class User implements UserDetails {
     @Getter @Setter
     private String password;
     @Column(nullable = false)
+    @Getter @Setter
     private UserRole userRole;
     @Setter
     private boolean isEnabled = true;

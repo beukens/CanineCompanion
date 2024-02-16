@@ -73,6 +73,6 @@ public class PersonServiceImpl implements PersonService {
      */
     private boolean hasAuthorities(Authentication authentication, long id){
         User userConnected =  userRepository.findByUsername(authentication.getName()).orElseThrow(()->new UsernameNotFoundException("utilisateur non trouvé"));
-        return userConnected.getPerson().equals(personRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("personne pas trouvée"))) && userConnected.getAuthorities().contains(UserRole.ADMIN);
+        return userConnected.getPerson().equals(personRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("personne pas trouvée"))) || userConnected.getAuthorities().contains(UserRole.ADMIN);
     }
 }

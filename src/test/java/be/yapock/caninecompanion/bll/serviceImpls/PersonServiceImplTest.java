@@ -1,7 +1,10 @@
 package be.yapock.caninecompanion.bll.serviceImpls;
 
 import be.yapock.caninecompanion.dal.models.Person;
+import be.yapock.caninecompanion.dal.models.User;
+import be.yapock.caninecompanion.dal.models.enums.UserRole;
 import be.yapock.caninecompanion.dal.repositories.PersonRepository;
+import be.yapock.caninecompanion.dal.repositories.UserRepository;
 import be.yapock.caninecompanion.pl.models.person.PersonForm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +12,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -18,11 +30,15 @@ import static org.mockito.Mockito.*;
 class PersonServiceImplTest {
     @Mock
     private PersonRepository personRepository;
+    @Mock
+    private UserRepository userRepository;
     @InjectMocks
     private PersonServiceImpl personService;
 
     private PersonForm form;
     private Person person;
+    private User user;
+    private Authentication authentication;
 
     @BeforeEach
     void setUp(){
@@ -34,6 +50,17 @@ class PersonServiceImplTest {
                 .phoneNumber(form.phoneNumber())
                 .gender(form.gender())
                 .build();
+        user= User.builder()
+                .person(person)
+                .username("username")
+                .password("password")
+                .userRole(UserRole.ADMIN)
+                .build();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        authentication = new UsernamePasswordAuthenticationToken("username", "password", authorities);
+
+
     }
 
     @Test
@@ -50,5 +77,27 @@ class PersonServiceImplTest {
         Exception exception = assertThrows(IllegalArgumentException.class, ()-> personService.create(null));
 
         assertEquals("le formulaire ne peut être null", exception.getMessage());
+    }
+
+    @Test
+    void getOne_ok(){
+        when(personRepository.findById(anyLong())).thenReturn(Optional.of(person));
+
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
+
+        Person result = personService.getOne(1L, authentication);
+        assertEquals(person, result);
+    }
+
+    @Test
+    void getOne_ko_unauthorized(){
+        user.setUserRole(UserRole.INTERN);
+        user.setPerson(new Person());
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
+        when(personRepository.findById(anyLong())).thenReturn(Optional.of(person));
+
+        Exception exception = assertThrows(AccessDeniedException.class, ()-> personService.getOne(1L, authentication));
+
+        assertEquals(exception.getMessage(),"Access denied");
     }
 }
