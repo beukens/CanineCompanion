@@ -124,4 +124,13 @@ class PersonServiceImplTest {
 
         verify(personRepository, times(1)).save(any(Person.class));
     }
+
+    @Test
+    void delete_ok() {
+        personService.delete(1L);
+
+        verify(personRepository, times(1)).deleteById(1L);
+    }
+
+
 }
