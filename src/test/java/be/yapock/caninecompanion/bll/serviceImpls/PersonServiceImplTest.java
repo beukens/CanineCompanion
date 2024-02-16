@@ -113,4 +113,15 @@ class PersonServiceImplTest {
 
         assertEquals(entities,result);
     }
+
+    @Test
+    void update_ok(){
+        when(personRepository.findById(anyLong())).thenReturn(Optional.of(person));
+
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
+
+        personService.update(1L, form, authentication);
+
+        verify(personRepository, times(1)).save(any(Person.class));
+    }
 }

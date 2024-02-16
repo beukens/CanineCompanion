@@ -56,7 +56,7 @@ public class PersonServiceImpl implements PersonService {
      */
     @Override
     public Person getOne(long id, Authentication authentication) {
-        if (!hasAuthorities(authentication, id)) {
+        if (!isAuthorized(authentication, id)) {
             throw new AccessDeniedException("Access denied");
         }
         return personRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("personne pas trouvée"));
@@ -85,7 +85,8 @@ public class PersonServiceImpl implements PersonService {
      */
     @Override
     public void update(long id, PersonForm form, Authentication authentication) {
-        if (!hasAuthorities(authentication, id)) {
+        if (form==null) throw new IllegalArgumentException("le formulaire ne peut être null");
+        if (!isAuthorized(authentication, id)) {
             throw new AccessDeniedException("Access denied");
         }
         Person person = personRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("personne pas trouvée"));
@@ -106,7 +107,7 @@ public class PersonServiceImpl implements PersonService {
      * @throws UsernameNotFoundException if the user is not found in the user repository
      * @throws EntityNotFoundException  if no person is found with the given ID
      */
-    private boolean hasAuthorities(Authentication authentication, long id){
+    private boolean isAuthorized(Authentication authentication, long id){
         User userConnected =  userRepository.findByUsername(authentication.getName()).orElseThrow(()->new UsernameNotFoundException("utilisateur non trouvé"));
         return userConnected.getPerson().equals(personRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("personne pas trouvée"))) || userConnected.getAuthorities().contains(UserRole.ADMIN);
     }
