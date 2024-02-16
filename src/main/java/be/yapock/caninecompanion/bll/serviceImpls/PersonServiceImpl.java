@@ -99,6 +99,16 @@ public class PersonServiceImpl implements PersonService {
     }
 
     /**
+     * Deletes a person entity from the person repository based on the provided ID.
+     *
+     * @param id the ID of the person to delete
+     */
+    @Override
+    public void delete(long id) {
+        personRepository.deleteById(id);
+    }
+
+    /**
      * Checks if the authentication has the necessary authorities to access a person with the given ID.
      *
      * @param authentication the authentication object containing the user's credentials

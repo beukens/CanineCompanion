@@ -10,5 +10,6 @@ public interface PersonService {
     void create (PersonForm form);
     Person getOne(long id, Authentication authentication);
     Page<Person> getAll(Pageable pageable);
-    void update (long id, PersonForm form, Authentication authentication);
+    void update(long id, PersonForm form, Authentication authentication);
+    void delete(long id);
 }

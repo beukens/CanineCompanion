@@ -72,4 +72,15 @@ public class PersonController {
         personService.update(id, form, authentication);
     }
 
+    /**
+     * Deletes a person with the specified ID.
+     *
+     * @param id the ID of the person to delete
+     */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable long id) {
+        personService.delete(id);
+    }
+
 }
