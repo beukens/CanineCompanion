@@ -74,6 +74,30 @@ public class PersonServiceImpl implements PersonService {
     }
 
     /**
+     * Updates a person entity in the person repository with the provided ID and form.
+     * Authorization is checked using the authentication object.
+     *
+     * @param id             the ID of the person to update
+     * @param form           the form containing the updated information
+     * @param authentication the authentication object containing the user's credentials
+     * @throws AccessDeniedException    if the authentication does not have the necessary authorities
+     * @throws EntityNotFoundException if no person is found with the given ID
+     */
+    @Override
+    public void update(long id, PersonForm form, Authentication authentication) {
+        if (!hasAuthorities(authentication, id)) {
+            throw new AccessDeniedException("Access denied");
+        }
+        Person person = personRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("personne pas trouvée"));
+        person.setFirstName(form.firstName());
+        person.setLastName(form.lastName());
+        person.setEmail(form.mail());
+        person.setPhoneNumber(form.phoneNumber());
+        person.setGender(form.gender());
+        personRepository.save(person);
+    }
+
+    /**
      * Checks if the authentication has the necessary authorities to access a person with the given ID.
      *
      * @param authentication the authentication object containing the user's credentials

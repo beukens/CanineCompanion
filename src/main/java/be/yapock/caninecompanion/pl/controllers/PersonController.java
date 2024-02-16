@@ -58,4 +58,18 @@ public class PersonController {
                 .map(PersonShortDTO::fromEntity));
     }
 
+    /**
+     * Updates a person with the given ID using the provided form and authentication information.
+     * Requires the user to be authenticated.
+     *
+     * @param id the ID of the person to update
+     * @param form the PersonForm object containing the updated details of the person
+     * @param authentication the authentication object representing the current user
+     */
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/{id}")
+    public void update(@PathVariable long id, @RequestBody PersonForm form, Authentication authentication) {
+        personService.update(id, form, authentication);
+    }
+
 }
