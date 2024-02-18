@@ -6,6 +6,7 @@ import be.yapock.caninecompanion.dal.models.enums.UserRole;
 import be.yapock.caninecompanion.dal.repositories.PersonRepository;
 import be.yapock.caninecompanion.dal.repositories.UserRepository;
 import be.yapock.caninecompanion.pl.models.person.PersonForm;
+import be.yapock.caninecompanion.pl.models.person.PersonSearchForm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -130,6 +131,17 @@ class PersonServiceImplTest {
         personService.delete(1L);
 
         verify(personRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void search_ok(){
+        PersonSearchForm searchForm = new PersonSearchForm("","","");
+        List<Person> personList = new ArrayList<>();
+
+        List<Person> result = personService.search(searchForm);
+
+        assertEquals(personList,result);
+
     }
 
 
