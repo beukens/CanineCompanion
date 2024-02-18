@@ -5,8 +5,10 @@ import be.yapock.caninecompanion.dal.models.Person;
 import be.yapock.caninecompanion.dal.models.User;
 import be.yapock.caninecompanion.dal.models.enums.UserRole;
 import be.yapock.caninecompanion.dal.repositories.PersonRepository;
+import be.yapock.caninecompanion.dal.repositories.SpecificationBuilder;
 import be.yapock.caninecompanion.dal.repositories.UserRepository;
 import be.yapock.caninecompanion.pl.models.person.PersonForm;
+import be.yapock.caninecompanion.pl.models.person.PersonSearchForm;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,14 +17,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
     private final UserRepository userRepository;
+    private final SpecificationBuilder specificationBuilder;
 
-    public PersonServiceImpl(PersonRepository personRepository, UserRepository userRepository) {
+    public PersonServiceImpl(PersonRepository personRepository, UserRepository userRepository, SpecificationBuilder specificationBuilder) {
         this.personRepository = personRepository;
         this.userRepository = userRepository;
+        this.specificationBuilder = specificationBuilder;
     }
 
     /**
@@ -106,6 +112,17 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void delete(long id) {
         personRepository.deleteById(id);
+    }
+
+    /**
+     * Searches for persons in the person repository based on the provided search form.
+     *
+     * @param form The person search form containing the search criteria.
+     * @return A list of persons that match the search criteria.
+     */
+    @Override
+    public List<Person> search(PersonSearchForm form){
+        return personRepository.findAll(SpecificationBuilder.specificationBuilder(form));
     }
 
     /**

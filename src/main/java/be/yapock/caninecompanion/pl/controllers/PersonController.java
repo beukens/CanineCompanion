@@ -4,6 +4,7 @@ import be.yapock.caninecompanion.bll.PersonService;
 import be.yapock.caninecompanion.dal.models.Person;
 import be.yapock.caninecompanion.pl.models.person.PersonForm;
 import be.yapock.caninecompanion.pl.models.person.PersonFullDTO;
+import be.yapock.caninecompanion.pl.models.person.PersonSearchForm;
 import be.yapock.caninecompanion.pl.models.person.PersonShortDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/client")
@@ -81,6 +85,21 @@ public class PersonController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable long id) {
         personService.delete(id);
+    }
+
+    /**
+     * Search for persons based on the provided search criteria.
+     *
+     * @param form the PersonSearchForm object containing the search criteria
+     * @return a ResponseEntity containing a List of PersonShortDTO objects that match the search criteria
+     */
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_HELPER')")
+    @GetMapping("/search")
+    public ResponseEntity<List<PersonShortDTO>> search(PersonSearchForm form) {
+        return ResponseEntity.ok(personService.search(form)
+                .stream()
+                .map(PersonShortDTO::fromEntity)
+                .collect(Collectors.toList()));
     }
 
 }
