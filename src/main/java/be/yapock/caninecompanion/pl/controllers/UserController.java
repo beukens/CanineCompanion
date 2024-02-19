@@ -1,7 +1,9 @@
 package be.yapock.caninecompanion.pl.controllers;
 
 import be.yapock.caninecompanion.bll.UserService;
+import be.yapock.caninecompanion.pl.models.user.AuthDTO;
 import be.yapock.caninecompanion.pl.models.user.CreateForm;
+import be.yapock.caninecompanion.pl.models.user.LoginForm;
 import jakarta.mail.MessagingException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -38,5 +40,17 @@ public class UserController {
     @PostMapping()
     public void create(@RequestBody CreateForm form, @RequestParam String token) throws IllegalAccessException {
         userService.create(token, form);
+    }
+
+    /**
+     * Logs in the user using the provided login form.
+     *
+     * @param form The login form containing the username and password.
+     * @return The authentication details of the logged-in user.
+     */
+    @PreAuthorize("isAnonymous()")
+    @PostMapping("/login")
+    public AuthDTO login(@RequestBody LoginForm form) {
+        return userService.login(form);
     }
 }
