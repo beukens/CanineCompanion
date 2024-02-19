@@ -242,4 +242,22 @@ class UserServiceImplTest {
 
         assertEquals(expectedMessage, exception.getMessage());
     }
+
+    @Test
+    void delete_ok(){
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        userService.delete(1L);
+        verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    void delete_ko(){
+        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(EntityNotFoundException.class, () -> userService.delete(1L));
+
+        String expectedMessage = "Utilisateur introuvable";
+
+        assertEquals(expectedMessage, exception.getMessage());
+    }
 }
