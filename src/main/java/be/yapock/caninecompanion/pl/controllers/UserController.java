@@ -53,4 +53,15 @@ public class UserController {
     public AuthDTO login(@RequestBody LoginForm form) {
         return userService.login(form);
     }
+
+    /**
+     * Deletes a user with the specified ID.
+     *
+     * @param id The ID of the user to be deleted.
+     */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable long id){
+        userService.delete(id);
+    }
 }

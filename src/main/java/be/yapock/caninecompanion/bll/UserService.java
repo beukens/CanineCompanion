@@ -9,4 +9,5 @@ public interface UserService {
     void sendCreateInvitation(long id) throws MessagingException;
     void create(String token, CreateForm form) throws IllegalAccessException;
     AuthDTO login(LoginForm form);
+    void delete(long id);
 }

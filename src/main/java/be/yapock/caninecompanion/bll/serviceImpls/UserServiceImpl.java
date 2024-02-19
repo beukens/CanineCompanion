@@ -131,4 +131,16 @@ public class UserServiceImpl implements UserService {
         String token = jwtProvider.generateToken(user.getUsername(), user.getUserRole());
         return new AuthDTO(token, user.getUsername(), user.getUserRole());
     }
+
+    /**
+     * Deletes a user with the given ID by disabling their account.
+     *
+     * @param id The ID of the user to be deleted.
+     * @throws EntityNotFoundException if the user with the given ID is not found.
+     */
+    public void delete(long id){
+        User user = userRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Utilisateur introuvable"));
+        user.setEnabled(false);
+        userRepository.save(user);
+    }
 }
