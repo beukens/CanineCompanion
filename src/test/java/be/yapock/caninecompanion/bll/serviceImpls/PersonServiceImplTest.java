@@ -22,6 +22,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +58,7 @@ class PersonServiceImplTest {
                 .person(person)
                 .username("username")
                 .password("password")
-                .userRole(UserRole.ADMIN)
+                .userRole(Collections.singletonList(UserRole.ADMIN))
                 .build();
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
@@ -94,7 +95,7 @@ class PersonServiceImplTest {
 
     @Test
     void getOne_ko_unauthorized(){
-        user.setUserRole(UserRole.INTERN);
+        user.setUserRole(Collections.singletonList(UserRole.INTERN));
         user.setPerson(new Person());
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
         when(personRepository.findById(anyLong())).thenReturn(Optional.of(person));

@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -103,7 +104,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByUsername(username)) throw new IllegalArgumentException("Utilisateur déjà existant");
         User user = User.builder()
                 .username(username)
-                .userRole(UserRole.CUSTOMER)
+                .userRole(Collections.singletonList(UserRole.CUSTOMER))
                 .password(passwordEncoder.encode(form.password()))
                 .person(person)
                 .isEnabled(true)
@@ -126,8 +127,8 @@ public class UserServiceImpl implements UserService {
     public AuthDTO login(LoginForm form) {
         if (form == null) throw new IllegalArgumentException("le formulaire ne peut être vide");
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(form.username(), form.password()));
-        User user = userRepository.findByUsername(form.username()).orElseThrow(() -> new UsernameNotFoundException("utilisateur non trouvé"));
-        String token = jwtProvider.generateToken(user.getUsername(), user.getAuthorities());
-        return new AuthDTO(token, user.getUsername(), user.getAuthorities());
+        User user = userRepository.findByUsername(form.username()).orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable"));
+        String token = jwtProvider.generateToken(user.getUsername(), user.getUserRole());
+        return new AuthDTO(token, user.getUsername(), user.getUserRole());
     }
 }

@@ -1,6 +1,10 @@
 package be.yapock.caninecompanion.pl.models.user;
 
+import be.yapock.caninecompanion.dal.models.enums.UserRole;
+
+import java.util.List;
+
 public record AuthDTO(String token,
                       String username,
-                      java.util.Collection<? extends org.springframework.security.core.GrantedAuthority> userRoles) {
+                      List<UserRole> userRoles) {
 }

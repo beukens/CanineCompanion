@@ -5,12 +5,15 @@ import be.yapock.caninecompanion.bll.mailing.EMailService;
 import be.yapock.caninecompanion.dal.models.Person;
 import be.yapock.caninecompanion.dal.models.User;
 import be.yapock.caninecompanion.dal.models.UserCreateToken;
+import be.yapock.caninecompanion.dal.models.enums.UserRole;
 import be.yapock.caninecompanion.dal.repositories.PersonRepository;
 import be.yapock.caninecompanion.dal.repositories.UserCreateTokenRepository;
 import be.yapock.caninecompanion.dal.repositories.UserRepository;
 import be.yapock.caninecompanion.pl.config.security.JWTProvider;
 import be.yapock.caninecompanion.pl.config.security.UserCreateTokenConfig;
+import be.yapock.caninecompanion.pl.models.user.AuthDTO;
 import be.yapock.caninecompanion.pl.models.user.CreateForm;
+import be.yapock.caninecompanion.pl.models.user.LoginForm;
 import be.yapock.caninecompanion.pl.models.validation.validators.EmailValidator;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,6 +23,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -55,6 +59,8 @@ class UserServiceImplTest {
     private User user;
     private CreateForm createForm;
     private UserCreateToken userCreateToken;
+    private LoginForm loginForm;
+    private AuthDTO authDTO;
 
     @BeforeEach
     void setUp(){
@@ -68,6 +74,7 @@ class UserServiceImplTest {
                 .id(1L)
                 .username("johndoe")
                 .password("password")
+                .userRole(Collections.singletonList(UserRole.ADMIN))
                 .build();
         createForm = new CreateForm("password", "password");
         userCreateToken = UserCreateToken.builder()
@@ -78,6 +85,7 @@ class UserServiceImplTest {
                 .firstName("john")
                 .id(1L)
                 .build();
+        loginForm = new LoginForm("username", "password");
     }
 
     @Test
@@ -199,6 +207,38 @@ class UserServiceImplTest {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> userService.create(anyString(), createForm));
 
         String expectedMessage = "Utilisateur déjà existant";
+
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    void login_ok(){
+        when(userRepository.findByUsername(loginForm.username())).thenReturn(Optional.of(user));
+        when(jwtProvider.generateToken(anyString(),any())).thenReturn("token");
+
+        authDTO = userService.login(loginForm);
+
+        assertEquals(user.getUsername(), authDTO.username());
+        assertEquals("token", authDTO.token());
+        assertEquals(user.getUserRole(), authDTO.userRoles());
+    }
+
+    @Test
+    void login_ko_formIsNull(){
+        Exception exception = assertThrows(IllegalArgumentException.class, ()-> userService.login(null));
+
+        String expectedMessage = "le formulaire ne peut être vide";
+
+        assertEquals(expectedMessage,exception.getMessage());
+    }
+
+    @Test
+    void login_ko_UserNotFound(){
+        when(userRepository.findByUsername(loginForm.username())).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(UsernameNotFoundException.class, () -> userService.login(loginForm));
+
+        String expectedMessage = "Utilisateur introuvable";
 
         assertEquals(expectedMessage, exception.getMessage());
     }
