@@ -170,4 +170,34 @@ public class UserServiceImpl implements UserService {
                 .build());
         eMailService.sendPasswordResetEmail(user.getPerson().getFirstName(), user.getPerson().getEmail(), token);
     }
+
+    /**
+     * Updates the password for the user identified by the given token.
+     *
+     * @param token The token used for validation.
+     * @param form  The form data containing the new password.
+     *
+     * @throws IllegalArgumentException   If the form is null or empty.
+     * @throws EntityNotFoundException    If the token is not found.
+     * @throws IllegalArgumentException   If the token is expired or already used.
+     * @throws UsernameNotFoundException  If the user associated with the token is not found.
+     */
+    @Override
+    public void updatePassword(String token, CreateForm form) {
+        if (form == null) throw new IllegalArgumentException("Le formulaire ne peut être vide");
+
+        UserToken userToken = userTokenRepository.findAllByTokenOrderByEmitAtDesc(token).stream()
+                .findFirst()
+                .orElseThrow(()-> new EntityNotFoundException("Token introuvable"));
+
+        long minutesDifferences = ChronoUnit.MINUTES.between(userToken.getEmitAt(), LocalDateTime.now());
+
+        if (minutesDifferences > 10) throw new IllegalArgumentException("Token expiré");
+        if (userToken.isAlreadyUsed()) throw  new IllegalArgumentException("Token déjà utilisé");
+
+        User user = userRepository.findByUsername(userToken.getFirstName()+userToken.getLastName()).orElseThrow(()-> new UsernameNotFoundException("Utilisateur non trouvé"));
+
+        user.setPassword(passwordEncoder.encode(form.password()));
+        userRepository.save(user);
+    }
 }

@@ -76,4 +76,16 @@ public class UserController {
     public void resetPasswordRequest(@RequestBody PasswordResetRequestForm form) {
         userService.resetPasswordRequest(form);
     }
+
+    /**
+     * Updates the password for a user using the provided form and token.
+     *
+     * @param form  The form containing the new password and confirmed password.
+     * @param token The token used for authorization.
+     */
+    @PreAuthorize("isAnonymous()")
+    @PutMapping
+    public void updatePassword(@RequestBody CreateForm form, @RequestParam String token){
+        userService.updatePassword(token, form);
+    }
 }

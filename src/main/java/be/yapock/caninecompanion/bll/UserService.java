@@ -12,4 +12,5 @@ public interface UserService {
     AuthDTO login(LoginForm form);
     void delete(long id);
     void resetPasswordRequest(PasswordResetRequestForm form);
+    void updatePassword(String token, CreateForm form);
 }
