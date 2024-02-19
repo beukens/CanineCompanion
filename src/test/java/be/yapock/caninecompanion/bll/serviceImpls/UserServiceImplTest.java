@@ -80,7 +80,26 @@ class UserServiceImplTest {
                 .build();
     }
 
+    @Test
+    void sendCreateInvitation_ok() throws MessagingException {
+        when(personRepository.findById(anyLong())).thenReturn(Optional.of(person));
+        when(userCreateTokenRepository.save(any())).thenReturn(userCreateToken);
 
+        userService.sendCreateInvitation(1L);
+
+        verify(userCreateTokenRepository, times(1)).save(any(UserCreateToken.class));
+    }
+
+    @Test
+    void sendCreateInvitation_ko_personNotFound(){
+        when(personRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(EntityNotFoundException.class, () -> userService.sendCreateInvitation(1L));
+
+        String expectedMessage = "Personne introuvable";
+
+        assertEquals(expectedMessage, exception.getMessage());
+    }
 
     @Test
     void create_ok() throws IllegalAccessException {

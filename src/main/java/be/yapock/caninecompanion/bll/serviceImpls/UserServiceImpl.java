@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void sendCreateInvitation(long id) throws MessagingException {
-        Person person = personRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Person pas trouvée"));
+        Person person = personRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Personne introuvable"));
         String token = UserCreateTokenConfig.generateToken(person.getFirstName(), person.getLastName());
         UserCreateToken userCreateToken = UserCreateToken.builder()
                 .emitAt(LocalDateTime.now())
