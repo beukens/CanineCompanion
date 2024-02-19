@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Builder @AllArgsConstructor @NoArgsConstructor
-public class UserCreateToken {
+public class UserToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

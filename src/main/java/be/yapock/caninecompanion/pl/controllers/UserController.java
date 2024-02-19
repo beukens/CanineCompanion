@@ -4,6 +4,7 @@ import be.yapock.caninecompanion.bll.UserService;
 import be.yapock.caninecompanion.pl.models.user.AuthDTO;
 import be.yapock.caninecompanion.pl.models.user.CreateForm;
 import be.yapock.caninecompanion.pl.models.user.LoginForm;
+import be.yapock.caninecompanion.pl.models.user.PasswordResetRequestForm;
 import jakarta.mail.MessagingException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -63,5 +64,16 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable long id){
         userService.delete(id);
+    }
+
+    /**
+     * Resets the password for a user by sending a password reset request form.
+     *
+     * @param form The password reset request form containing the login and email of the user.
+     */
+    @PreAuthorize("isAnonymous()")
+    @PostMapping("/reset-password")
+    public void resetPasswordRequest(@RequestBody PasswordResetRequestForm form) {
+        userService.resetPasswordRequest(form);
     }
 }

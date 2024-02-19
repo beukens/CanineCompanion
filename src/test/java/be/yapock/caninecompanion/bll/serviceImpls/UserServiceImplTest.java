@@ -1,20 +1,18 @@
 package be.yapock.caninecompanion.bll.serviceImpls;
 
-import be.yapock.caninecompanion.bll.UserService;
 import be.yapock.caninecompanion.bll.mailing.EMailService;
 import be.yapock.caninecompanion.dal.models.Person;
 import be.yapock.caninecompanion.dal.models.User;
-import be.yapock.caninecompanion.dal.models.UserCreateToken;
+import be.yapock.caninecompanion.dal.models.UserToken;
 import be.yapock.caninecompanion.dal.models.enums.UserRole;
 import be.yapock.caninecompanion.dal.repositories.PersonRepository;
-import be.yapock.caninecompanion.dal.repositories.UserCreateTokenRepository;
+import be.yapock.caninecompanion.dal.repositories.UserTokenRepository;
 import be.yapock.caninecompanion.dal.repositories.UserRepository;
 import be.yapock.caninecompanion.pl.config.security.JWTProvider;
-import be.yapock.caninecompanion.pl.config.security.UserCreateTokenConfig;
+import be.yapock.caninecompanion.pl.config.security.UserTokenConfig;
 import be.yapock.caninecompanion.pl.models.user.AuthDTO;
 import be.yapock.caninecompanion.pl.models.user.CreateForm;
 import be.yapock.caninecompanion.pl.models.user.LoginForm;
-import be.yapock.caninecompanion.pl.models.validation.validators.EmailValidator;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,9 +45,9 @@ class UserServiceImplTest {
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
-    private UserCreateTokenConfig userCreateTokenConfig;
+    private UserTokenConfig userTokenConfig;
     @Mock
-    private UserCreateTokenRepository userCreateTokenRepository;
+    private UserTokenRepository userTokenRepository;
     @Mock
     private EMailService eMailService;
     @InjectMocks
@@ -58,7 +56,7 @@ class UserServiceImplTest {
     private Person person;
     private User user;
     private CreateForm createForm;
-    private UserCreateToken userCreateToken;
+    private UserToken userToken;
     private LoginForm loginForm;
     private AuthDTO authDTO;
 
@@ -77,7 +75,7 @@ class UserServiceImplTest {
                 .userRole(Collections.singletonList(UserRole.ADMIN))
                 .build();
         createForm = new CreateForm("password", "password");
-        userCreateToken = UserCreateToken.builder()
+        userToken = UserToken.builder()
                 .isAlreadyUsed(false)
                 .token("token")
                 .emitAt(LocalDateTime.now())
@@ -91,11 +89,11 @@ class UserServiceImplTest {
     @Test
     void sendCreateInvitation_ok() throws MessagingException {
         when(personRepository.findById(anyLong())).thenReturn(Optional.of(person));
-        when(userCreateTokenRepository.save(any())).thenReturn(userCreateToken);
+        when(userTokenRepository.save(any())).thenReturn(userToken);
 
         userService.sendCreateInvitation(1L);
 
-        verify(userCreateTokenRepository, times(1)).save(any(UserCreateToken.class));
+        verify(userTokenRepository, times(1)).save(any(UserToken.class));
     }
 
     @Test
@@ -111,8 +109,8 @@ class UserServiceImplTest {
 
     @Test
     void create_ok() throws IllegalAccessException {
-        when(userCreateTokenConfig.validateToken(anyString())).thenReturn(true);
-        when(userCreateTokenRepository.findAllByTokenOrderByEmitAtDesc(anyString())).thenReturn(Collections.singletonList(userCreateToken));
+        when(userTokenConfig.validateToken(anyString())).thenReturn(true);
+        when(userTokenRepository.findAllByTokenOrderByEmitAtDesc(anyString())).thenReturn(Collections.singletonList(userToken));
         when(personRepository.findByFirstNameAndLastName(anyString(),anyString())).thenReturn(Optional.of(person));
         when(userRepository.save(any(User.class))).thenReturn(user);
 
@@ -143,7 +141,7 @@ class UserServiceImplTest {
 
     @Test
     void create_ko_wrongToken(){
-        when(userCreateTokenConfig.validateToken(anyString())).thenReturn(false);
+        when(userTokenConfig.validateToken(anyString())).thenReturn(false);
 
         Exception exception = assertThrows(IllegalAccessException.class, ()-> userService.create(anyString(),createForm));
 
@@ -154,8 +152,8 @@ class UserServiceImplTest {
 
     @Test
     void create_ko_tokenNotFound(){
-        when(userCreateTokenConfig.validateToken(anyString())).thenReturn(true);
-        when(userCreateTokenRepository.findAllByTokenOrderByEmitAtDesc(anyString())).thenReturn(Collections.emptyList());
+        when(userTokenConfig.validateToken(anyString())).thenReturn(true);
+        when(userTokenRepository.findAllByTokenOrderByEmitAtDesc(anyString())).thenReturn(Collections.emptyList());
 
         Exception exception = assertThrows(EntityNotFoundException.class, ()-> userService.create(anyString(),createForm));
 
@@ -166,12 +164,12 @@ class UserServiceImplTest {
 
     @Test
     void create_ko_tokenExpired(){
-        UserCreateToken expiredToken = UserCreateToken.builder()
+        UserToken expiredToken = UserToken.builder()
                 .emitAt(LocalDateTime.now().minusMonths(1))
                 .build();
 
-        when(userCreateTokenConfig.validateToken(anyString())).thenReturn(true);
-        when(userCreateTokenRepository.findAllByTokenOrderByEmitAtDesc(anyString())).thenReturn(Collections.singletonList(expiredToken));
+        when(userTokenConfig.validateToken(anyString())).thenReturn(true);
+        when(userTokenRepository.findAllByTokenOrderByEmitAtDesc(anyString())).thenReturn(Collections.singletonList(expiredToken));
 
         Exception exception = assertThrows(IllegalArgumentException.class, ()-> userService.create(anyString(),createForm));
 
@@ -182,13 +180,13 @@ class UserServiceImplTest {
 
     @Test
     void create_ko_tokenAlreadyUsed(){
-        UserCreateToken usedToken = UserCreateToken.builder()
+        UserToken usedToken = UserToken.builder()
                 .emitAt(LocalDateTime.now())
                 .isAlreadyUsed(true)
                 .build();
 
-        when(userCreateTokenConfig.validateToken(anyString())).thenReturn(true);
-        when(userCreateTokenRepository.findAllByTokenOrderByEmitAtDesc(anyString())).thenReturn(Collections.singletonList(usedToken));
+        when(userTokenConfig.validateToken(anyString())).thenReturn(true);
+        when(userTokenRepository.findAllByTokenOrderByEmitAtDesc(anyString())).thenReturn(Collections.singletonList(usedToken));
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> userService.create(anyString(), createForm));
 
@@ -199,8 +197,8 @@ class UserServiceImplTest {
 
     @Test
     void create_ko_whenUserAlreadyExists() {
-        when(userCreateTokenConfig.validateToken(anyString())).thenReturn(true);
-        when(userCreateTokenRepository.findAllByTokenOrderByEmitAtDesc(anyString())).thenReturn(Collections.singletonList(userCreateToken));
+        when(userTokenConfig.validateToken(anyString())).thenReturn(true);
+        when(userTokenRepository.findAllByTokenOrderByEmitAtDesc(anyString())).thenReturn(Collections.singletonList(userToken));
         when(personRepository.findByFirstNameAndLastName(anyString(), anyString())).thenReturn(Optional.of(person));
         when(userRepository.existsByUsername(anyString())).thenReturn(true);
 

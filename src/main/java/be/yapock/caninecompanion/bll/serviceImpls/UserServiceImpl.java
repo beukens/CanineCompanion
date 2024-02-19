@@ -4,18 +4,20 @@ import be.yapock.caninecompanion.bll.UserService;
 import be.yapock.caninecompanion.bll.mailing.EMailService;
 import be.yapock.caninecompanion.dal.models.Person;
 import be.yapock.caninecompanion.dal.models.User;
-import be.yapock.caninecompanion.dal.models.UserCreateToken;
+import be.yapock.caninecompanion.dal.models.UserToken;
 import be.yapock.caninecompanion.dal.models.enums.UserRole;
 import be.yapock.caninecompanion.dal.repositories.PersonRepository;
-import be.yapock.caninecompanion.dal.repositories.UserCreateTokenRepository;
+import be.yapock.caninecompanion.dal.repositories.UserTokenRepository;
 import be.yapock.caninecompanion.dal.repositories.UserRepository;
 import be.yapock.caninecompanion.pl.config.security.JWTProvider;
-import be.yapock.caninecompanion.pl.config.security.UserCreateTokenConfig;
+import be.yapock.caninecompanion.pl.config.security.UserTokenConfig;
 import be.yapock.caninecompanion.pl.models.user.AuthDTO;
 import be.yapock.caninecompanion.pl.models.user.CreateForm;
 import be.yapock.caninecompanion.pl.models.user.LoginForm;
+import be.yapock.caninecompanion.pl.models.user.PasswordResetRequestForm;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,7 +26,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
@@ -37,18 +38,18 @@ public class UserServiceImpl implements UserService {
     private final JWTProvider jwtProvider;
     @Autowired
     private final PasswordEncoder passwordEncoder;
-    private final UserCreateTokenConfig userCreateTokenConfig;
-    private final UserCreateTokenRepository userCreateTokenRepository;
+    private final UserTokenConfig userTokenConfig;
+    private final UserTokenRepository userTokenRepository;
     private final EMailService eMailService;
 
-    public UserServiceImpl(UserRepository userRepository, PersonRepository personRepository, AuthenticationManager authenticationManager, JWTProvider jwtProvider, PasswordEncoder passwordEncoder, UserCreateTokenConfig userCreateToken1, UserCreateTokenConfig userCreateTokenConfig, UserCreateTokenRepository userCreateTokenRepository, EMailService eMailService) {
+    public UserServiceImpl(UserRepository userRepository, PersonRepository personRepository, AuthenticationManager authenticationManager, JWTProvider jwtProvider, PasswordEncoder passwordEncoder, UserTokenConfig userCreateToken1, UserTokenConfig userTokenConfig, UserTokenRepository userTokenRepository, EMailService eMailService) {
         this.userRepository = userRepository;
         this.personRepository = personRepository;
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
         this.passwordEncoder = passwordEncoder;
-        this.userCreateTokenConfig = userCreateTokenConfig;
-        this.userCreateTokenRepository = userCreateTokenRepository;
+        this.userTokenConfig = userTokenConfig;
+        this.userTokenRepository = userTokenRepository;
         this.eMailService = eMailService;
     }
 
@@ -62,15 +63,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public void sendCreateInvitation(long id) throws MessagingException {
         Person person = personRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Personne introuvable"));
-        String token = UserCreateTokenConfig.generateToken(person.getFirstName(), person.getLastName());
-        UserCreateToken userCreateToken = UserCreateToken.builder()
+        String token = UserTokenConfig.generateToken(person.getFirstName(), person.getLastName());
+        UserToken userToken = UserToken.builder()
                 .emitAt(LocalDateTime.now())
                 .firstName(person.getFirstName())
                 .lastName(person.getLastName())
                 .token(token)
                 .isAlreadyUsed(false)
                 .build();
-        userCreateTokenRepository.save(userCreateToken);
+        userTokenRepository.save(userToken);
         eMailService.sendInvitationEmail(person.getEmail(), person.getFirstName(), person.getLastName(), token);
     }
 
@@ -87,8 +88,8 @@ public class UserServiceImpl implements UserService {
     public void create(String token, CreateForm form) throws IllegalAccessException {
         if (form == null || !form.password().equals(form.confirmedPassword()))
             throw new IllegalArgumentException("formulaire non valide");
-        if (!userCreateTokenConfig.validateToken(token)) throw new IllegalAccessException("Token invalide");
-        UserCreateToken createToken = userCreateTokenRepository.findAllByTokenOrderByEmitAtDesc(token).stream()
+        if (!userTokenConfig.validateToken(token)) throw new IllegalAccessException("Token invalide");
+        UserToken createToken = userTokenRepository.findAllByTokenOrderByEmitAtDesc(token).stream()
                 .findFirst()
                 .orElseThrow(() -> new EntityNotFoundException("Token introuvable"));
 
@@ -112,7 +113,7 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
         createToken.setAlreadyUsed(true);
-        userCreateTokenRepository.save(createToken);
+        userTokenRepository.save(createToken);
     }
 
     /**
@@ -124,6 +125,7 @@ public class UserServiceImpl implements UserService {
      * @throws UsernameNotFoundException  If the user with the given username is not found.
      * @throws AuthenticationException    If the authentication fails.
      */
+    @Override
     public AuthDTO login(LoginForm form) {
         if (form == null) throw new IllegalArgumentException("le formulaire ne peut être vide");
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(form.username(), form.password()));
@@ -138,9 +140,34 @@ public class UserServiceImpl implements UserService {
      * @param id The ID of the user to be deleted.
      * @throws EntityNotFoundException if the user with the given ID is not found.
      */
+    @Override
     public void delete(long id){
         User user = userRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Utilisateur introuvable"));
         user.setEnabled(false);
         userRepository.save(user);
+    }
+
+    /**
+     * Resets the password for a user by generating a password reset token, saving it to the database,
+     * and sending an email notification to the user with a password reset link.
+     *
+     * @param form The form data containing the user's login and email.
+     * @throws UsernameNotFoundException   If the user with the given username is not found.
+     * @throws IllegalArgumentException  If the email in the form does not match the user's email.
+     */
+    @SneakyThrows
+    @Override
+    public void resetPasswordRequest(PasswordResetRequestForm form) {
+        User user = userRepository.findByUsername(form.login()).orElseThrow(()-> new UsernameNotFoundException("Utilisateur introuvable"));
+        if (!user.getPerson().getEmail().equals(form.email())) throw new IllegalArgumentException("Formulaire Invalide");
+        String token = UserTokenConfig.generateToken(user.getPerson().getFirstName(), user.getPerson().getLastName());
+        userTokenRepository.save(UserToken.builder()
+                .emitAt(LocalDateTime.now())
+                .firstName(user.getPerson().getFirstName())
+                .lastName(user.getPerson().getLastName())
+                .token(token)
+                .isAlreadyUsed(false)
+                .build());
+        eMailService.sendPasswordResetEmail(user.getPerson().getFirstName(), user.getPerson().getEmail(), token);
     }
 }

@@ -55,4 +55,29 @@ public class EMailService {
         helper.setSubject(mail.getSubject());
         helper.setText(html, true);
     }
+
+    public void sendPasswordResetEmail(String firstName, String email, String token) throws MessagingException {
+        Map<String, Object> properties = new HashMap<String, Object>();
+        properties.put("firstName", firstName);
+        properties.put("link", "http://8081/reset-password?token=" + token);
+
+        Mail mail = Mail.builder()
+                .to(email)
+                .from("guichetplayzone@gmail.com")
+                .template(new Mail.MailTemplate("resetPassword", properties))
+                .subject("Password Reset")
+                .build();
+
+        String html = getHtmlContent(mail);
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message,
+                MimeMessageHelper.MULTIPART_MODE_RELATED,
+                StandardCharsets.UTF_8.name());
+
+        helper.setTo(mail.getTo());
+        helper.setFrom(mail.getFrom());
+        helper.setSubject(mail.getSubject());
+        helper.setText(html, true);
+    }
 }
