@@ -80,20 +80,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public void create(String token, CreateForm form) throws IllegalAccessException {
         if (form==null || !form.password().equals(form.confirmedPassword())) throw new IllegalArgumentException("formulaire non valide");
-        if (!userCreateTokenConfig.validateToken(token)) throw new IllegalAccessException("token non valide");
+        if (!userCreateTokenConfig.validateToken(token)) throw new IllegalAccessException("Token invalide");
         UserCreateToken createToken = userCreateTokenRepository.findAllByTokenOrderByEmitAtDesc(token).stream()
                 .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("Token pas trouvé"));
+                .orElseThrow(() -> new EntityNotFoundException("Token introuvable"));
 
         long hoursDifference = ChronoUnit.HOURS.between(createToken.getEmitAt(), LocalDateTime.now());
 
         if (hoursDifference > 24) throw new IllegalArgumentException("Token expiré");
-        if (createToken.isAlreadyUsed()) throw new IllegalArgumentException("token déja utilisé");
+        if (createToken.isAlreadyUsed()) throw new IllegalArgumentException("Token déjà utilisé");
+
 
         Person person = personRepository.findByFirstNameAndLastName(createToken.getFirstName(), createToken.getLastName()).orElseThrow(()->new EntityNotFoundException("personne pas trouvée"));
 
         String username = person.getFirstName().toLowerCase().trim() + person.getLastName().toLowerCase().trim();
-
+        if (userRepository.existsByUsername(username)) throw new IllegalArgumentException("Utilisateur déjà existant");
         User user = User.builder()
                 .username(username)
                 .userRole(UserRole.CUSTOMER)
