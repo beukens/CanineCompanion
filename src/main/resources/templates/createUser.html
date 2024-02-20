@@ -3,7 +3,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml"></html>
 <head>
     <meta charset="UTF-8">
-    <title>Réinitialisation de Mot de passe</title>
+    <title>Création de compte</title>
     <style>
         body{
             box-sizing: border-box;
@@ -48,18 +48,18 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Demande de réinitialisation de mot de passe</h1>
-    </div>
+<div class="header">
+    <h1>Demande de réinitialisation de mot de passe</h1>
+</div>
 <div class="message">
     <br><br><br>
-    <p th:text="${'Cher ' + firstName}"></p>
-    <p>Nous avons reçu une demande de réinitialisation de mot de passe associée à votre compte Canine Companion</p>
-    <p>Veuillez cliquer sur le lien suivant pour réinitialiser votre mot de passe:</p>
+    <p th:text="${'Cher ' + firstName + '' + lastName}"></p>
+    <p>Nous avons reçu une demande de création de compte concernant l'application Canine Companion</p>
+    <p>Veuillez cliquer sur le lien suivant pour initialiser votre compte:</p>
     <div class="button-container">
-        <a class="login-button" th:ref="${link}">Réinitialiastion du mot de passe</a>
-    <p>Merci,</p>
-    <p>L'équipe Canine Companion</p>
+        <a class="login-button" th:ref="${link}">Création de compte</a>
+        <p>Merci,</p>
+        <p>L'équipe Canine Companion</p>
     </div>
 </div>
 </body>
