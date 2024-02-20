@@ -27,6 +27,16 @@ public class AddressController {
     }
 
     /**
+     * Deletes an address with the specified ID.
+     *
+     * @param id The ID of the address to be deleted.
+     */
+    @DeleteMapping("/{id}")
+    public void deleteAddress(@PathVariable long id) {
+        addressService.delete(id);
+    }
+
+    /**
      * Retrieves the address for a given person ID.
      *
      * @param personId The ID of the person.

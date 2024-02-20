@@ -111,4 +111,11 @@ class AddressServiceImplTest {
         String expectedMessage = "Adresse introuvable";
         assertEquals(expectedMessage, exception.getMessage());
     }
+
+    @Test
+    void delete_ok(){
+        addressService.delete(anyLong());
+
+        verify(addressRepository,times(1)).deleteById(anyLong());
+    }
 }

@@ -57,4 +57,14 @@ public class AddressServiceImpl implements AddressService {
                 .orElseThrow(() -> new EntityNotFoundException("Personne introuvable")))
                 .orElseThrow(()-> new EntityNotFoundException("Adresse introuvable"));
     }
+
+    /**
+     * Deletes an address with the given ID.
+     *
+     * @param id the ID of the address to delete
+     */
+    @Override
+    public void delete(long id) {
+        addressRepository.deleteById(id);
+    }
 }
