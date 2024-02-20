@@ -7,6 +7,7 @@ import be.yapock.caninecompanion.dal.repositories.AddressRepository;
 import be.yapock.caninecompanion.dal.repositories.PersonRepository;
 import be.yapock.caninecompanion.dal.repositories.UserRepository;
 import be.yapock.caninecompanion.pl.models.address.AddressForm;
+import be.yapock.caninecompanion.pl.models.address.AddressFullDto;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -41,5 +42,18 @@ public class AddressServiceImpl implements AddressService {
                 .person(person)
                 .build();
         addressRepository.save(address);
+    }
+
+    /**
+     * Retrieves the address of a person by their ID.
+     *
+     * @param id the ID of the person
+     * @return the address of the person with the specified ID
+     * @throws EntityNotFoundException if the person is not found
+     */
+    @Override
+    public Address getOneByPersonId(long id) {
+        return addressRepository.findByPerson(personRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable")));
     }
 }
