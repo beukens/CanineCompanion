@@ -5,6 +5,7 @@ import be.yapock.caninecompanion.dal.models.Address;
 import be.yapock.caninecompanion.pl.models.address.AddressForm;
 import be.yapock.caninecompanion.pl.models.address.AddressFullDto;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +22,7 @@ public class AddressController {
      *
      * @param form The AddressForm object containing the details of the address to be created.
      */
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_HELPER')")
     @PostMapping
     public void createAddress(@RequestBody AddressForm form) {
         addressService.create(form);
@@ -31,6 +33,7 @@ public class AddressController {
      *
      * @param id The ID of the address to be deleted.
      */
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_HELPER')")
     @DeleteMapping("/{id}")
     public void deleteAddress(@PathVariable long id) {
         addressService.delete(id);
@@ -43,6 +46,7 @@ public class AddressController {
      * @return A ResponseEntity containing the address details in the AddressFullDto format. Returns HttpStatus.OK if the address is found, or HttpStatus.NOT_FOUND if the address
      * is not found.
      */
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_HELPER')")
     @GetMapping("/{personId}")
     public ResponseEntity<AddressFullDto> getAddressByPersonId(@PathVariable long personId) {
         return ResponseEntity.ok(AddressFullDto.fromEntity(addressService.getOneByPersonId(personId)));
