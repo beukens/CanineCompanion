@@ -158,6 +158,7 @@ public class UserServiceImpl implements UserService {
     @SneakyThrows
     @Override
     public void resetPasswordRequest(PasswordResetRequestForm form) {
+        if (form==null) throw new IllegalArgumentException("Le formulaire ne peut être null");
         User user = userRepository.findByUsername(form.login()).orElseThrow(()-> new UsernameNotFoundException("Utilisateur introuvable"));
         if (!user.getPerson().getEmail().equals(form.email())) throw new IllegalArgumentException("Formulaire Invalide");
         String token = UserTokenConfig.generateToken(user.getPerson().getFirstName(), user.getPerson().getLastName());

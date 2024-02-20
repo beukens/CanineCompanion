@@ -13,6 +13,7 @@ import be.yapock.caninecompanion.pl.config.security.UserTokenConfig;
 import be.yapock.caninecompanion.pl.models.user.AuthDTO;
 import be.yapock.caninecompanion.pl.models.user.CreateForm;
 import be.yapock.caninecompanion.pl.models.user.LoginForm;
+import be.yapock.caninecompanion.pl.models.user.PasswordResetRequestForm;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,12 +68,14 @@ class UserServiceImplTest {
                 .id(1L)
                 .firstName("John")
                 .lastName("Doe")
+                .email("email")
                 .build();
         user = User.builder()
                 .id(1L)
                 .username("johndoe")
                 .password("password")
                 .userRole(Collections.singletonList(UserRole.ADMIN))
+                .person(person)
                 .build();
         createForm = new CreateForm("password", "password");
         userToken = UserToken.builder()
@@ -257,5 +260,121 @@ class UserServiceImplTest {
         String expectedMessage = "Utilisateur introuvable";
 
         assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    void resetPasswordRequest_ok(){
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
+        when(userTokenRepository.save(any())).thenReturn(userToken);
+
+        PasswordResetRequestForm passwordResetRequestForm = new PasswordResetRequestForm("login","email");
+        userService.resetPasswordRequest(passwordResetRequestForm);
+
+        verify(userTokenRepository,times(1)).save(any(UserToken.class));
+    }
+
+    @Test
+    void resetPasswordRequest_ko_formIsNull(){
+        Exception exception = assertThrows(IllegalArgumentException.class, ()-> userService.resetPasswordRequest(null));
+
+        String expectedMessage = "Le formulaire ne peut être null";
+
+        assertEquals(expectedMessage,exception.getMessage());
+    }
+
+    @Test
+    void resetPasswordRequest_ko_usernameNotFound(){
+        PasswordResetRequestForm passwordResetRequestForm = new PasswordResetRequestForm("login","email");
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(UsernameNotFoundException.class, ()-> userService.resetPasswordRequest(passwordResetRequestForm));
+
+        String expectedMessage = "Utilisateur introuvable";
+
+        assertEquals(expectedMessage,exception.getMessage());
+    }
+
+    @Test
+    void resetPasswordRequest_ko_EmailDontMatch(){
+        PasswordResetRequestForm passwordResetRequestForm = new PasswordResetRequestForm("login","wrongemail");
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
+
+        Exception exception = assertThrows(IllegalArgumentException.class, ()-> userService.resetPasswordRequest(passwordResetRequestForm));
+
+        String expectedMessage = "Formulaire Invalide";
+
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    void updatePassword_ok(){
+        when(userTokenRepository.findAllByTokenOrderByEmitAtDesc(anyString())).thenReturn(Collections.singletonList(userToken));
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        userService.updatePassword("token", createForm);
+
+        verify(userRepository, times(1)).save(any());
+    }
+
+    @Test
+    void updatePassword_ko_formNull(){
+        Exception exception = assertThrows(IllegalArgumentException.class, ()-> userService.updatePassword("token",null));
+
+        String expectedMessage = "Le formulaire ne peut être vide";
+
+        assertEquals(expectedMessage,exception.getMessage());
+    }
+
+    @Test
+    void updatePassword_ko_tokenNotFound(){
+        when(userTokenRepository.findAllByTokenOrderByEmitAtDesc(anyString())).thenReturn(Collections.emptyList());
+
+        Exception exception = assertThrows(EntityNotFoundException.class, ()-> userService.updatePassword(anyString(),createForm));
+
+        String expectedMessage = "Token introuvable";
+
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    void updatePassword_ko_tokenExpired(){
+        UserToken expiredToken = UserToken.builder()
+                .emitAt(LocalDateTime.now().minusMinutes(11))
+                .build();
+        when(userTokenRepository.findAllByTokenOrderByEmitAtDesc(anyString())).thenReturn(Collections.singletonList(expiredToken));
+
+        Exception exception = assertThrows(IllegalArgumentException.class, ()->userService.updatePassword(anyString(),createForm));
+
+        String expectedMessage = "Token expiré";
+
+        assertEquals(expectedMessage,exception.getMessage());
+    }
+
+    @Test
+    void update_ko_tokenUsed(){
+        UserToken usedToken = UserToken.builder()
+                .isAlreadyUsed(true)
+                .emitAt(LocalDateTime.now())
+                .build();
+        when(userTokenRepository.findAllByTokenOrderByEmitAtDesc(anyString())).thenReturn(Collections.singletonList(usedToken));
+
+        Exception exception = assertThrows(IllegalArgumentException.class, ()-> userService.updatePassword(anyString(),createForm));
+
+        String expectedMessage = "Token déjà utilisé";
+
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    void update_ko_userNotFound(){
+        when(userTokenRepository.findAllByTokenOrderByEmitAtDesc(anyString())).thenReturn(Collections.singletonList(userToken));
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(UsernameNotFoundException.class, ()-> userService.updatePassword(anyString(),createForm));
+
+        String expectedMessage = "Utilisateur non trouvé";
+
+        assertEquals(expectedMessage,exception.getMessage());
     }
 }
