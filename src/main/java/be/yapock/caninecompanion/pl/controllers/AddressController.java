@@ -2,10 +2,7 @@ package be.yapock.caninecompanion.pl.controllers;
 
 import be.yapock.caninecompanion.bll.AddressService;
 import be.yapock.caninecompanion.pl.models.address.AddressForm;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/address")
@@ -24,5 +21,15 @@ public class AddressController {
     @PostMapping
     public void createAddress(@RequestBody AddressForm form) {
         addressService.create(form);
+    }
+
+    /**
+     * Deletes an address with the specified ID.
+     *
+     * @param id The ID of the address to be deleted.
+     */
+    @DeleteMapping("/{id}")
+    public void deleteAddress(@PathVariable long id) {
+        addressService.delete(id);
     }
 }
