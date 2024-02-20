@@ -54,6 +54,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public Address getOneByPersonId(long id) {
         return addressRepository.findByPerson(personRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable")));
+                .orElseThrow(() -> new EntityNotFoundException("Personne introuvable")))
+                .orElseThrow(()-> new EntityNotFoundException("Adresse introuvable"));
     }
 }

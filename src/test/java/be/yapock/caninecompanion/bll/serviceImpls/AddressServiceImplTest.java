@@ -80,4 +80,35 @@ class AddressServiceImplTest {
         String expectedMessage= "Utilisateur introuvable";
         assertEquals(expectedMessage,exception.getMessage());
     }
+
+    @Test
+    void getOneByPersonId_ok(){
+        when(personRepository.findById(anyLong())).thenReturn(Optional.of(person));
+        when(addressRepository.findByPerson(any(Person.class))).thenReturn(Optional.of(address));
+
+        Address result = addressService.getOneByPersonId(person.getId());
+
+        assertEquals(address, result);
+    }
+
+    @Test
+    void getOneByPersonId_ko_personneIntrouvable(){
+        when(personRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(EntityNotFoundException.class, () -> addressService.getOneByPersonId(person.getId()));
+
+        String expectedMessage = "Personne introuvable";
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    void getOneByPersonId_ko_adressNotFound(){
+        when(personRepository.findById(anyLong())).thenReturn(Optional.of(person));
+        when(addressRepository.findByPerson(any(Person.class))).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(EntityNotFoundException.class, () -> addressService.getOneByPersonId(person.getId()));
+
+        String expectedMessage = "Adresse introuvable";
+        assertEquals(expectedMessage, exception.getMessage());
+    }
 }
