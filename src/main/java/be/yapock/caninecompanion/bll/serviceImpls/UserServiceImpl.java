@@ -129,6 +129,7 @@ public class UserServiceImpl implements UserService {
     public AuthDTO login(LoginForm form) {
         if (form == null) throw new IllegalArgumentException("le formulaire ne peut être vide");
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(form.username(), form.password()));
+
         User user = userRepository.findByUsername(form.username()).orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable"));
         String token = jwtProvider.generateToken(user.getUsername(), user.getUserRole());
         return new AuthDTO(token, user.getUsername(), user.getUserRole());

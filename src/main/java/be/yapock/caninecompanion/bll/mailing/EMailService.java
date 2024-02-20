@@ -29,7 +29,7 @@ public class EMailService {
 
     public void sendInvitationEmail(String email, String firstName, String lastName, String token) throws MessagingException{
         //TODO a mettre a jour
-        String createLink = "http://8081/create-account?token="+token;
+        String createLink = "localhost:8081/create-account?token="+token;
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message,
@@ -54,12 +54,14 @@ public class EMailService {
         helper.setFrom(mail.getFrom());
         helper.setSubject(mail.getSubject());
         helper.setText(html, true);
+
+        mailSender.send(message);
     }
 
     public void sendPasswordResetEmail(String firstName, String email, String token) throws MessagingException {
         Map<String, Object> properties = new HashMap<String, Object>();
         properties.put("firstName", firstName);
-        properties.put("link", "http://8081/reset-password?token=" + token);
+        properties.put("link", "localhost:8081/reset-password?token=" + token);
 
         Mail mail = Mail.builder()
                 .to(email)
@@ -79,5 +81,7 @@ public class EMailService {
         helper.setFrom(mail.getFrom());
         helper.setSubject(mail.getSubject());
         helper.setText(html, true);
+
+        mailSender.send(message);
     }
 }

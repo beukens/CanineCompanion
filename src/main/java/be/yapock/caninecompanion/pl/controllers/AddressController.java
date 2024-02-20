@@ -48,7 +48,7 @@ public class AddressController {
      */
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_HELPER')")
     @GetMapping("/{personId}")
-    public ResponseEntity<AddressFullDto> getAddressByPersonId(@PathVariable long personId) {
-        return ResponseEntity.ok(AddressFullDto.fromEntity(addressService.getOneByPersonId(personId)));
+    public ResponseEntity<AddressFullDto> getOne(@PathVariable long personId) {
+        return ResponseEntity.ok(AddressFullDto.fromEntity(addressService.getOneById(personId)));
     }
 }

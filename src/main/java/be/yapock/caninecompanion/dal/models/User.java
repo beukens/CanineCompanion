@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder @AllArgsConstructor @NoArgsConstructor
 @Entity
@@ -21,11 +22,13 @@ public class User implements UserDetails {
     @Column(length = 50, nullable = false)
     @Getter @Setter
     private String username;
-    @Column(length = 50, nullable = false)
-    @Getter @Setter
-    private String password;
     @Column(nullable = false)
     @Getter @Setter
+    private String password;
+    @Getter @Setter
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @Column(length = 50,nullable = false)
     private List<UserRole> userRole;
     @Setter
     private boolean isEnabled = true;
@@ -37,7 +40,9 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE" + userRole));
+        return userRole.stream()
+                .map(userRole -> new SimpleGrantedAuthority("ROLE_"+userRole))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -57,6 +62,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return isEnabled;
     }
 }

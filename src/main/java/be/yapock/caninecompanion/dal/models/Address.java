@@ -1,10 +1,7 @@
 package be.yapock.caninecompanion.dal.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Builder @AllArgsConstructor @NoArgsConstructor
@@ -25,7 +22,6 @@ public class Address {
     private String city;
     @Column(name = "country")
     private String country;
-    @OneToOne
-    @JoinColumn(name = "person_id")
-    private Person person;
+    @Setter
+    private boolean isDeleted;
 }

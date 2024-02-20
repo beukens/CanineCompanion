@@ -40,7 +40,6 @@ class AddressServiceImplTest {
                 .build();
         addressForm = new AddressForm("street", 1, "box", 1000, "city", "country", person.getId());
         address = Address.builder()
-                .person(person)
                 .box(addressForm.box())
                 .city(addressForm.city())
                 .country(addressForm.country())
@@ -82,31 +81,28 @@ class AddressServiceImplTest {
     }
 
     @Test
-    void getOneByPersonId_ok(){
-        when(personRepository.findById(anyLong())).thenReturn(Optional.of(person));
-        when(addressRepository.findByPerson(any(Person.class))).thenReturn(Optional.of(address));
+    void getOneById_ok(){
+        when(addressRepository.findById(anyLong())).thenReturn(Optional.of(address));
 
-        Address result = addressService.getOneByPersonId(person.getId());
+        Address result = addressService.getOneById(person.getId());
 
         assertEquals(address, result);
     }
 
     @Test
     void getOneByPersonId_ko_personneIntrouvable(){
-        when(personRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(EntityNotFoundException.class, () -> addressService.getOneByPersonId(person.getId()));
+        Exception exception = assertThrows(EntityNotFoundException.class, () -> addressService.getOneById(person.getId()));
 
-        String expectedMessage = "Personne introuvable";
+        String expectedMessage = "Adresse introuvable";
         assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
     void getOneByPersonId_ko_adressNotFound(){
-        when(personRepository.findById(anyLong())).thenReturn(Optional.of(person));
-        when(addressRepository.findByPerson(any(Person.class))).thenReturn(Optional.empty());
+        when(addressRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(EntityNotFoundException.class, () -> addressService.getOneByPersonId(person.getId()));
+        Exception exception = assertThrows(EntityNotFoundException.class, () -> addressService.getOneById(person.getId()));
 
         String expectedMessage = "Adresse introuvable";
         assertEquals(expectedMessage, exception.getMessage());
@@ -116,6 +112,6 @@ class AddressServiceImplTest {
     void delete_ok(){
         addressService.delete(anyLong());
 
-        verify(addressRepository,times(1)).deleteById(anyLong());
+        verify(addressRepository,times(1)).save(any(Address.class));
     }
 }

@@ -7,5 +7,5 @@ import be.yapock.caninecompanion.pl.models.address.AddressFullDto;
 public interface AddressService {
     void create(AddressForm form);
     void delete(long id);
-    Address getOneByPersonId(long id);
+    Address getOneById(long id);
 }

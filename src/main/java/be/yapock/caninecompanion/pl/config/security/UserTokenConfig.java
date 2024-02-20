@@ -36,7 +36,7 @@ public class UserTokenConfig {
                     .build().verify(token);
 
             String firstName = jwt.getSubject();
-            String lastName = String.valueOf(jwt.getClaim("lastName"));
+            String lastName = String.valueOf(jwt.getClaim("lastName").asString());
             Person person = personRepository.findByFirstNameAndLastName(firstName, lastName).orElseThrow(()->new EntityNotFoundException("personne pas trouvée"));
             return true;
         } catch (JWTVerificationException | EntityNotFoundException e){

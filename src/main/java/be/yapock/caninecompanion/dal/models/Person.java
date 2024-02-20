@@ -19,9 +19,12 @@ public class Person {
     @Column(length = 50, nullable = false)
     private String email;
     @Getter @Setter
-    @Column(length = 12, nullable = false)
+    @Column(length = 50, nullable = false)
     private String phoneNumber;
     @Getter @Setter
     @Column(nullable = false)
-    private char gender;
+    private String gender;
+    @ManyToOne @Getter @Setter
+    @JoinColumn(name = "address_id")
+    private Address address;
 }

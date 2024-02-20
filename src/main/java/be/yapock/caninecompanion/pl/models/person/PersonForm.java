@@ -18,6 +18,8 @@ public record PersonForm(
         @ValidPhoneNumber
         String phoneNumber,
         @NotBlank @NotNull
-        char gender
+        String gender,
+        @NotBlank @NotNull
+        long adressId
 ) {
 }

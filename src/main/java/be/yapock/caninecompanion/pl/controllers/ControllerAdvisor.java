@@ -24,4 +24,16 @@ public class ControllerAdvisor {
         return ResponseEntity.status(error.getStatus())
                 .body(error);
     }
+
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<Error> handleIllegalArgumentException(RuntimeException e,HttpServletRequest req){
+        Error error = Error.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message(e.getMessage())
+                .requestMadeAt(LocalDateTime.now())
+                .URI(req.getRequestURI())
+                .build();
+        return ResponseEntity.status(error.getStatus())
+                .body(error);
+    }
 }

@@ -18,17 +18,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+import static be.yapock.caninecompanion.dal.repositories.SpecificationBuilder.specificationBuilder;
 @Service
 public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
     private final UserRepository userRepository;
-    private final SpecificationBuilder specificationBuilder;
 
-    public PersonServiceImpl(PersonRepository personRepository, UserRepository userRepository, SpecificationBuilder specificationBuilder) {
+    public PersonServiceImpl(PersonRepository personRepository, UserRepository userRepository) {
         this.personRepository = personRepository;
         this.userRepository = userRepository;
-        this.specificationBuilder = specificationBuilder;
     }
 
     /**
@@ -136,6 +134,7 @@ public class PersonServiceImpl implements PersonService {
      */
     private boolean isAuthorized(Authentication authentication, long id){
         User userConnected =  userRepository.findByUsername(authentication.getName()).orElseThrow(()->new UsernameNotFoundException("utilisateur non trouvé"));
-        return userConnected.getPerson().equals(personRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("personne pas trouvée"))) || userConnected.getAuthorities().contains(UserRole.ADMIN);
+        if (userConnected.getUserRole().contains(UserRole.ADMIN)) return true;
+        else return userConnected.getPerson().equals(personRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("personne pas trouvée")));
     }
 }

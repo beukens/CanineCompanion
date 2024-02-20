@@ -39,7 +39,6 @@ public class AddressServiceImpl implements AddressService {
                 .zip(form.zip())
                 .city(form.city())
                 .country(form.country())
-                .person(person)
                 .build();
         addressRepository.save(address);
     }
@@ -52,10 +51,8 @@ public class AddressServiceImpl implements AddressService {
      * @throws EntityNotFoundException if the person is not found
      */
     @Override
-    public Address getOneByPersonId(long id) {
-        return addressRepository.findByPerson(personRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Personne introuvable")))
-                .orElseThrow(()-> new EntityNotFoundException("Adresse introuvable"));
+    public Address getOneById(long id) {
+        return addressRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Adresse introuvable"));
     }
 
     /**
@@ -65,6 +62,8 @@ public class AddressServiceImpl implements AddressService {
      */
     @Override
     public void delete(long id) {
-        addressRepository.deleteById(id);
+        Address address = addressRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Adresse introuvable"));
+        address.setDeleted(true);
+        addressRepository.save(address);
     }
 }

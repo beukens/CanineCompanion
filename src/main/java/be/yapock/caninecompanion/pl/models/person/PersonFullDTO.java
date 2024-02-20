@@ -8,7 +8,7 @@ public record PersonFullDTO(
         String lastName,
         String email,
         String phoneNumber,
-        char gender
+        String gender
 ) {
     public static PersonFullDTO fromEntity(Person person){
         return new PersonFullDTO(

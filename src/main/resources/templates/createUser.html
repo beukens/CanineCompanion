@@ -49,7 +49,7 @@
 </head>
 <body>
 <div class="header">
-    <h1>Demande de réinitialisation de mot de passe</h1>
+    <h1>Demande de Création de compte</h1>
 </div>
 <div class="message">
     <br><br><br>
@@ -57,10 +57,11 @@
     <p>Nous avons reçu une demande de création de compte concernant l'application Canine Companion</p>
     <p>Veuillez cliquer sur le lien suivant pour initialiser votre compte:</p>
     <div class="button-container">
-        <a class="login-button" th:ref="${link}">Création de compte</a>
-        <p>Merci,</p>
-        <p>L'équipe Canine Companion</p>
+        <a class="login-button" th:href="${link}">Création de compte</a>
     </div>
+    <p>Merci,</p>
+    <p>L'équipe Canine Companion</p>
+
 </div>
 </body>
 </html>
