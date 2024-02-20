@@ -10,6 +10,8 @@ compose.yml
 !**/main/java/be/yapock/caninecompanion/pl/config/security/JWTAuthenticationFilter.java
 !**/main/java/be/yapock/caninecompanion/pl/config/security/JWTProvider.java
 !**/main/java/be/yapock/caninecompanion/pl/config/security/SecurityConfig.java
+C:\Users\farah\Desktop\Projets perso\MakerHub\CanineCompanion\src\main\resources\application-dev.yml
+C:\Users\farah\Desktop\Projets perso\MakerHub\CanineCompanion\src\main\resources\application-prod.yml
 
 ### STS ###
 .apt_generated
