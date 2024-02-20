@@ -7,6 +7,7 @@ import be.yapock.caninecompanion.dal.repositories.AddressRepository;
 import be.yapock.caninecompanion.dal.repositories.PersonRepository;
 import be.yapock.caninecompanion.dal.repositories.UserRepository;
 import be.yapock.caninecompanion.pl.models.address.AddressForm;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,7 +30,7 @@ public class AddressServiceImpl implements AddressService {
     public void create(AddressForm form) {
         if (form==null) throw new IllegalArgumentException("Le formulaire ne peut être null");
         Person person = personRepository.findById(form.personId())
-                .orElseThrow(() -> new IllegalArgumentException("Utilisateur introuvable"));
+                .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable"));
         Address address = Address.builder()
                 .street(form.street())
                 .number(form.number())
