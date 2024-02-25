@@ -94,7 +94,7 @@ public class PersonController {
      * @return a ResponseEntity containing a List of PersonShortDTO objects that match the search criteria
      */
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_HELPER')")
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<List<PersonShortDTO>> search(PersonSearchForm form) {
         return ResponseEntity.ok(personService.search(form)
                 .stream()
