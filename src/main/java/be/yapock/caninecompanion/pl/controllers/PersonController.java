@@ -95,7 +95,7 @@ public class PersonController {
      */
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_HELPER')")
     @PostMapping("/search")
-    public ResponseEntity<List<PersonShortDTO>> search(PersonSearchForm form) {
+    public ResponseEntity<List<PersonShortDTO>> search(@RequestBody PersonSearchForm form) {
         return ResponseEntity.ok(personService.search(form)
                 .stream()
                 .map(PersonShortDTO::fromEntity)
