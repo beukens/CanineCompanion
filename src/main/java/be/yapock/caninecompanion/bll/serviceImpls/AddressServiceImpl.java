@@ -30,17 +30,17 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public void create(AddressForm form) {
         if (form==null) throw new IllegalArgumentException("Le formulaire ne peut être null");
-        Person person = personRepository.findById(form.personId())
-                .orElseThrow(() -> new EntityNotFoundException("Utilisateur introuvable"));
-        Address address = Address.builder()
-                .street(form.street())
-                .number(form.number())
-                .box(form.box())
-                .zip(form.zip())
-                .city(form.city())
-                .country(form.country())
-                .build();
-        addressRepository.save(address);
+        if (!addressRepository.existsByCityAndStreetAndNumberAndBox(form.city(), form.street(), form.number(), form.box())) {
+            Address address = Address.builder()
+                    .street(form.street())
+                    .number(form.number())
+                    .box(form.box())
+                    .zip(form.zip())
+                    .city(form.city())
+                    .country(form.country())
+                    .build();
+            addressRepository.save(address);
+        }
     }
 
     /**

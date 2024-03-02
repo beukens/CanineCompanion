@@ -4,6 +4,7 @@ import be.yapock.caninecompanion.bll.PersonService;
 import be.yapock.caninecompanion.dal.models.Person;
 import be.yapock.caninecompanion.dal.models.User;
 import be.yapock.caninecompanion.dal.models.enums.UserRole;
+import be.yapock.caninecompanion.dal.repositories.AddressRepository;
 import be.yapock.caninecompanion.dal.repositories.PersonRepository;
 import be.yapock.caninecompanion.dal.repositories.SpecificationBuilder;
 import be.yapock.caninecompanion.dal.repositories.UserRepository;
@@ -23,10 +24,12 @@ import static be.yapock.caninecompanion.dal.repositories.SpecificationBuilder.sp
 public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
     private final UserRepository userRepository;
+    private final AddressRepository addressRepository;
 
-    public PersonServiceImpl(PersonRepository personRepository, UserRepository userRepository) {
+    public PersonServiceImpl(PersonRepository personRepository, UserRepository userRepository, AddressRepository addressRepository) {
         this.personRepository = personRepository;
         this.userRepository = userRepository;
+        this.addressRepository = addressRepository;
     }
 
     /**
@@ -44,6 +47,7 @@ public class PersonServiceImpl implements PersonService {
                 .email(form.mail())
                 .phoneNumber(form.phoneNumber())
                 .gender(form.gender())
+                .address(addressRepository.findById(form.adressId()).orElseThrow(()->new EntityNotFoundException("Adresse non trouvée")))
                 .build();
         personRepository.save(person);
     }

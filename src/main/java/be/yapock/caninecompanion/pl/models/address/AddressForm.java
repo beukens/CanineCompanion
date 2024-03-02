@@ -17,8 +17,6 @@ public record AddressForm(
         @NotNull @NotBlank
         String city,
         @NotNull @NotBlank
-        String country,
-        @NotNull @NotBlank
-        long personId
+        String country
 ) {
 }

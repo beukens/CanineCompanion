@@ -9,4 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
+    boolean existsByCityAndStreetAndNumberAndBox(String city, String street, int number, String box);
 }
