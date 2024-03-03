@@ -46,7 +46,7 @@ class PersonServiceImplTest {
 
     @BeforeEach
     void setUp(){
-        form = new PersonForm("firstName", "lastName", "mail", "phoneNumber", "M",1L);
+        form = new PersonForm("firstName", "lastName", "mail", "phoneNumber", "M", "street",1, "box",1000, "city", "country");
         person = Person.builder()
                 .firstName(form.firstName())
                 .lastName(form.lastName())
