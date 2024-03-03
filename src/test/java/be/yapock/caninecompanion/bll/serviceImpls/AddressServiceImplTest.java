@@ -1,13 +1,8 @@
 package be.yapock.caninecompanion.bll.serviceImpls;
 
-import be.yapock.caninecompanion.dal.models.Address;
 import be.yapock.caninecompanion.dal.models.Person;
-import be.yapock.caninecompanion.dal.models.User;
-import be.yapock.caninecompanion.dal.repositories.AddressRepository;
 import be.yapock.caninecompanion.dal.repositories.PersonRepository;
-import be.yapock.caninecompanion.pl.models.address.AddressForm;
 import jakarta.persistence.EntityNotFoundException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +33,7 @@ class AddressServiceImplTest {
         person = Person.builder()
                 .id(1L)
                 .build();
-        addressForm = new AddressForm("street", 1, "box", 1000, "city", "country", person.getId());
+        addressForm = new AddressForm("street", 1, "box", 1000, "city", "country");
         address = Address.builder()
                 .box(addressForm.box())
                 .city(addressForm.city())

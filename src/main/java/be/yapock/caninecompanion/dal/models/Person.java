@@ -24,7 +24,22 @@ public class Person {
     @Getter @Setter
     @Column(nullable = false)
     private String gender;
-    @ManyToOne @Getter @Setter
-    @JoinColumn(name = "address_id")
-    private Address address;
+    @Column(name= "number")
+    @Getter @Setter
+    private int number;
+    @Column(name="box")
+    @Getter @Setter
+    private String box;
+    @Getter @Setter
+    @Column(name = "street")
+    private String street;
+    @Getter @Setter
+    @Column(name = "zip")
+    private int zip;
+    @Getter @Setter
+    @Column(name = "city")
+    private String city;
+    @Getter @Setter
+    @Column(name = "country")
+    private String country;
 }

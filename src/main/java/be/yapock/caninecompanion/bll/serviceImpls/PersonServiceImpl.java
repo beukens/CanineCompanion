@@ -4,7 +4,6 @@ import be.yapock.caninecompanion.bll.PersonService;
 import be.yapock.caninecompanion.dal.models.Person;
 import be.yapock.caninecompanion.dal.models.User;
 import be.yapock.caninecompanion.dal.models.enums.UserRole;
-import be.yapock.caninecompanion.dal.repositories.AddressRepository;
 import be.yapock.caninecompanion.dal.repositories.PersonRepository;
 import be.yapock.caninecompanion.dal.repositories.SpecificationBuilder;
 import be.yapock.caninecompanion.dal.repositories.UserRepository;
@@ -19,17 +18,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import static be.yapock.caninecompanion.dal.repositories.SpecificationBuilder.specificationBuilder;
+
 @Service
 public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
     private final UserRepository userRepository;
-    private final AddressRepository addressRepository;
 
-    public PersonServiceImpl(PersonRepository personRepository, UserRepository userRepository, AddressRepository addressRepository) {
+    public PersonServiceImpl(PersonRepository personRepository, UserRepository userRepository) {
         this.personRepository = personRepository;
         this.userRepository = userRepository;
-        this.addressRepository = addressRepository;
     }
 
     /**
@@ -47,7 +44,12 @@ public class PersonServiceImpl implements PersonService {
                 .email(form.mail())
                 .phoneNumber(form.phoneNumber())
                 .gender(form.gender())
-                .address(addressRepository.findById(form.adressId()).orElseThrow(()->new EntityNotFoundException("Adresse non trouvée")))
+                .box(form.box())
+                .zip(form.zip())
+                .city(form.city())
+                .number(form.number())
+                .street(form.street())
+                .country(form.country())
                 .build();
         personRepository.save(person);
     }

@@ -8,7 +8,13 @@ public record PersonFullDTO(
         String lastName,
         String email,
         String phoneNumber,
-        String gender
+        String gender,
+        int number,
+        String box,
+        String street,
+        int zip,
+        String city,
+        String country
 ) {
     public static PersonFullDTO fromEntity(Person person){
         return new PersonFullDTO(
@@ -17,7 +23,13 @@ public record PersonFullDTO(
                 person.getLastName(),
                 person.getEmail(),
                 person.getPhoneNumber(),
-                person.getGender()
+                person.getGender(),
+                person.getNumber(),
+                person.getBox(),
+                person.getStreet(),
+                person.getZip(),
+                person.getCity(),
+                person.getCountry()
         );
     }
 }

@@ -2,9 +2,7 @@ package be.yapock.caninecompanion.pl.models.person;
 
 import be.yapock.caninecompanion.pl.models.validation.constraints.ValidEmail;
 import be.yapock.caninecompanion.pl.models.validation.constraints.ValidPhoneNumber;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 public record PersonForm(
         @NotBlank @NotNull
@@ -19,7 +17,17 @@ public record PersonForm(
         String phoneNumber,
         @NotBlank @NotNull
         String gender,
-        @NotBlank @NotNull
-        long adressId
+        @NotNull @NotBlank
+        String street,
+        @NotNull @NotBlank @Min(1)
+        int number,
+        @NotNull @NotBlank
+        String box,
+        @NotNull @NotBlank @Min(1000) @Max(99999)
+        int zip,
+        @NotNull @NotBlank
+        String city,
+        @NotNull @NotBlank
+        String country
 ) {
 }
