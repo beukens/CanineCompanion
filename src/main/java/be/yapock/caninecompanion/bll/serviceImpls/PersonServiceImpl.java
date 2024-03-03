@@ -105,6 +105,12 @@ public class PersonServiceImpl implements PersonService {
         person.setEmail(form.mail());
         person.setPhoneNumber(form.phoneNumber());
         person.setGender(form.gender());
+        person.setBox(form.box());
+        person.setStreet(form.street());
+        person.setNumber(form.number());
+        person.setZip(form.zip());
+        person.setCity(form.city());
+        person.setCountry(form.country());
         personRepository.save(person);
     }
 
