@@ -35,7 +35,7 @@ class DogServiceImplTest {
 
     @BeforeEach
     void setUp(){
-        createForm = new DogCreateForm("John", "Doe", LocalDate.now(), "Male", true);
+        createForm = new DogCreateForm("John", "Doe", LocalDate.now(), "Male", true, 1L);
         dog = Dog.builder()
                 .firstName(createForm.firstName())
                 .lastName(createForm.lastName())
