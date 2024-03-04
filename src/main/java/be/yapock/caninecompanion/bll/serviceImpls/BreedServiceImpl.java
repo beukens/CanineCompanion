@@ -3,6 +3,7 @@ package be.yapock.caninecompanion.bll.serviceImpls;
 import be.yapock.caninecompanion.bll.BreedService;
 import be.yapock.caninecompanion.dal.models.Breed;
 import be.yapock.caninecompanion.dal.repositories.BreedRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +22,6 @@ public class BreedServiceImpl implements BreedService {
      */
     @Override
     public Breed getOne(long id) {
-        return breedRepository.getOne(id);
+        return breedRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Race pas trouvée"));
     }
 }
