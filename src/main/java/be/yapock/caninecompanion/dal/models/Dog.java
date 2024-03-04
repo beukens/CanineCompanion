@@ -10,20 +10,20 @@ import java.time.LocalDate;
 @Getter
 public class Dog {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    private long id;
     @Setter
-    String firstName;
+    private String firstName;
     @Setter
-    String lastName;
+    private String lastName;
     @Setter
-    LocalDate dateOfBirth;
+    private LocalDate dateOfBirth;
     @Setter
-    String sex;
+    private String sex;
     @Setter
-    boolean isSterilized;
+    private boolean isSterilized;
     @Setter
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    Person owner;
+    private Person owner;
 
 }
