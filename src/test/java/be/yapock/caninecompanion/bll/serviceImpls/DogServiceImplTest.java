@@ -3,6 +3,7 @@ package be.yapock.caninecompanion.bll.serviceImpls;
 import be.yapock.caninecompanion.dal.models.Dog;
 import be.yapock.caninecompanion.dal.repositories.DogRepository;
 import be.yapock.caninecompanion.pl.models.dog.DogCreateForm;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,5 +54,23 @@ class DogServiceImplTest {
         Exception exception = assertThrows(IllegalArgumentException.class, ()-> dogService.create(null));
 
         assertEquals("Le formulaire ne peut être vide", exception.getMessage());
+    }
+
+    @Test
+    void getOne_ok(){
+        when(dogRepository.findById(anyLong())).thenReturn(Optional.of(dog));
+
+        Dog result = dogService.getDogById(1L);
+
+        assertEquals(dog, result);
+    }
+
+    @Test
+    void getOne_ko_notFound(){
+        when(dogRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(EntityNotFoundException.class, ()-> dogService.getDogById(1L));
+
+        assertEquals("Chien pas trouvé", exception.getMessage());
     }
 }
