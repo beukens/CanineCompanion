@@ -58,7 +58,7 @@ public class DogServiceImpl implements DogService {
      */
     @Override
     public List<Dog> search(DogSearchForm form) {
-        return dogRepository.findAll(SpecificationBuilder.specificationBuilder(form));
+        return dogRepository.findAll(SpecificationBuilder.specificationBuilderDog(form));
     }
 
     /**

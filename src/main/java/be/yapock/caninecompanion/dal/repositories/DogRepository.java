@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface DogRepository extends JpaRepository<Dog, Long> {
+public interface DogRepository extends JpaRepository<Dog, Long>, JpaSpecificationExecutor<Dog>{
     List<Dog> findAllByOwner(long id);
 }

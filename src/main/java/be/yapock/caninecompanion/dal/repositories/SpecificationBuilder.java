@@ -26,7 +26,7 @@ public class SpecificationBuilder {
         };
     }
 
-    public static Specification<Dog> specificationBuilder(DogSearchForm form){
+    public static Specification<Dog> specificationBuilderDog(DogSearchForm form){
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
