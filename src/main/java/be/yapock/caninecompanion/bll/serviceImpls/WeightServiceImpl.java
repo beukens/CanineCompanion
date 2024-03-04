@@ -28,6 +28,7 @@ public class WeightServiceImpl implements WeightService {
      */
     @Override
     public void create(WeightForm form){
+        if (form==null) throw new IllegalArgumentException("le formulaire ne peut être null");
         Weight weight = Weight.builder()
                 .date(LocalDate.now())
                 .dog(dogRepository.findById(form.dogId()).orElseThrow(()->new EntityNotFoundException("Chien pas trouvé")))
