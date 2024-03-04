@@ -8,6 +8,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/breed")
 public class BreedController {
@@ -41,5 +43,17 @@ public class BreedController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable long id){
         breedService.delete(id);
+    }
+
+    /**
+     * Retrieves a list of all breeds.
+     *
+     * @return A ResponseEntity object containing a list of BreedDTO objects representing the breeds.
+     */
+    @GetMapping
+    public ResponseEntity<List<BreedDTO>> getAll(){
+        return ResponseEntity.ok(breedService.getAll().stream()
+                .map(BreedDTO::fromEntity)
+                .toList());
     }
 }

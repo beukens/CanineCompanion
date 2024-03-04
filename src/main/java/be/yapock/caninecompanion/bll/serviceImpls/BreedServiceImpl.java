@@ -7,6 +7,8 @@ import jakarta.persistence.EntityNotFoundException;
 import be.yapock.caninecompanion.pl.models.breed.BreedForm;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BreedServiceImpl implements BreedService {
     private final BreedRepository breedRepository;
@@ -52,5 +54,16 @@ public class BreedServiceImpl implements BreedService {
     @Override
     public void delete(long id) {
         breedRepository.deleteById(id);
+    }
+
+
+    /**
+     * Retrieves all Breed objects from the breed repository.
+     *
+     * @return a List of all Breed objects in the repository
+     */
+    @Override
+    public List<Breed> getAll() {
+        return breedRepository.findAll();
     }
 }

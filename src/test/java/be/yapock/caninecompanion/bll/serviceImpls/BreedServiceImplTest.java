@@ -5,6 +5,7 @@ import be.yapock.caninecompanion.dal.models.enums.DogSize;
 import be.yapock.caninecompanion.dal.models.enums.RaceGroup;
 import be.yapock.caninecompanion.dal.repositories.BreedRepository;
 import be.yapock.caninecompanion.pl.models.breed.BreedForm;
+import be.yapock.caninecompanion.pl.models.breed.BreedDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +14,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -24,6 +28,8 @@ import static org.mockito.Mockito.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class BreedServiceImplTest {
@@ -71,5 +77,14 @@ class BreedServiceImplTest {
     void delete_ok(){
         breedService.delete(1L);
         verify(breedRepository, times(1)).deleteById(anyLong());
+    }
+
+    @Test
+    void getAll_ok(){
+        when(breedRepository.findAll()).thenReturn(Collections.singletonList(breed));
+
+        List<Breed> result = breedService.getAll();
+
+        assertEquals(Collections.singletonList(breed),result);
     }
 }
