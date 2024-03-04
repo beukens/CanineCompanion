@@ -143,7 +143,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void delete(long id){
-        User user = userRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Utilisateur introuvable"));
+        User user = userRepository.findByPersonId(id).orElseThrow(()-> new EntityNotFoundException("Utilisateur introuvable"));
         user.setEnabled(false);
         userRepository.save(user);
     }

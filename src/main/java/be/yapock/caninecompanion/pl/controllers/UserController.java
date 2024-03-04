@@ -25,7 +25,7 @@ public class UserController {
      * @throws MessagingException If an error occurs while sending the invitation email.
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/{id}")
+    @GetMapping("/{id}")
     public void sendCreateInvitation(@PathVariable long id) throws MessagingException {
         userService.sendCreateInvitation(id);
     }
