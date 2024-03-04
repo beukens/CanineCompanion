@@ -2,6 +2,7 @@ package be.yapock.caninecompanion.pl.controllers;
 
 import be.yapock.caninecompanion.bll.WeightService;
 import be.yapock.caninecompanion.pl.models.weight.WeightForm;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import be.yapock.caninecompanion.pl.models.weight.WeightOneDto;
@@ -9,9 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import be.yapock.caninecompanion.pl.models.weight.WeightAllDTO;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,6 +31,7 @@ public class WeightController {
      * @return ResponseEntity containing a list of WeightAllDTO objects representing the weight data.
      */
     @GetMapping("/all/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_HELPER')")
     public ResponseEntity<List<WeightAllDTO>> getAll(@PathVariable long id){
         return ResponseEntity.ok(weightService.getAll(id).stream()
                 .map(WeightAllDTO::fromEntity)
@@ -45,6 +44,7 @@ public class WeightController {
      * @param form the WeightForm object containing the dogId and weight information
      */
     @PostMapping("/")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_HELPER') || hasRole('ROLE_INTERN')")
     public void createWeight(@RequestBody WeightForm form) {
         weightService.create(form);
     }
@@ -57,6 +57,7 @@ public class WeightController {
      *         or ResponseEntity with an appropriate status code indicating no matching Weight entity was found
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_HELPER') || hasRole('ROLE_INTERN')")
     public ResponseEntity<WeightOneDto> getOne(@PathVariable long id){
         return ResponseEntity.ok(WeightOneDto.fromEntity(weightService.getOne(id)));
     }

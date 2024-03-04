@@ -4,7 +4,6 @@ import be.yapock.caninecompanion.pl.models.weight.WeightForm;
 
 import be.yapock.caninecompanion.dal.models.Weight;
 
-import be.yapock.caninecompanion.dal.models.Weight;
 
 import java.util.List;
 

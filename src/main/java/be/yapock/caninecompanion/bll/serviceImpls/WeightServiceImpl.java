@@ -3,11 +3,8 @@ package be.yapock.caninecompanion.bll.serviceImpls;
 import be.yapock.caninecompanion.bll.WeightService;
 import be.yapock.caninecompanion.dal.models.Weight;
 import be.yapock.caninecompanion.dal.repositories.DogRepository;
-import be.yapock.caninecompanion.dal.models.Weight;
-import be.yapock.caninecompanion.dal.models.Weight;
 import be.yapock.caninecompanion.dal.repositories.WeightRepository;
 import be.yapock.caninecompanion.pl.models.weight.WeightForm;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
