@@ -124,4 +124,11 @@ class DogServiceImplTest {
         assertEquals(1, dogs.size());
         assertEquals(dog, dogs.get(0));
     }
+
+    @Test
+    void delete_ok(){
+        dogService.delete(1L);
+
+        verify(dogRepository, times(1)).deleteById(eq(1L));
+    }
 }
