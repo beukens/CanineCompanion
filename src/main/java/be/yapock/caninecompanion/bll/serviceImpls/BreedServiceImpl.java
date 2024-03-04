@@ -23,4 +23,14 @@ public class BreedServiceImpl implements BreedService {
     public Breed getOne(long id) {
         return breedRepository.getOne(id);
     }
+
+    /**
+     * Deletes a Breed object from the breed repository based on the provided id.
+     *
+     * @param id the id of the breed to delete
+     */
+    @Override
+    public void delete(long id) {
+        breedRepository.deleteById(id);
+    }
 }

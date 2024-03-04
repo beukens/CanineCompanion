@@ -3,10 +3,7 @@ package be.yapock.caninecompanion.pl.controllers;
 import be.yapock.caninecompanion.bll.BreedService;
 import be.yapock.caninecompanion.pl.models.breed.BreedDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/breed")
@@ -20,5 +17,15 @@ public class BreedController {
     @GetMapping("/{id}")
     public ResponseEntity<BreedDTO> getOne(@PathVariable long id){
         return ResponseEntity.ok(BreedDTO.fromEntity(breedService.getOne(id)));
+    }
+
+    /**
+     * Deletes a Breed by its ID.
+     *
+     * @param id The ID of the Breed to be deleted.
+     */
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable long id){
+        breedService.delete(id);
     }
 }
