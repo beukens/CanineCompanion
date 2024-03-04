@@ -15,11 +15,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
+
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class WeightServiceImplTest {
@@ -90,5 +95,13 @@ class WeightServiceImplTest {
         when(weightRepository.findLastByDog_Id(anyLong())).thenReturn(Optional.empty());
         Exception exception = assertThrows(EntityNotFoundException.class, ()-> weightService.getOne(1L));
         assertEquals("Chien pas trouvé", exception.getMessage());
+    }
+
+    @Test
+    void getAll_ok(){
+        when(weightRepository.findAllByDog_Id(anyLong())).thenReturn(Collections.singletonList(weight));
+
+        List<Weight> result = weightService.getAll(1L);
+        assertEquals(Collections.singletonList(weight), result);
     }
 }

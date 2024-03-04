@@ -4,6 +4,7 @@ import be.yapock.caninecompanion.bll.WeightService;
 import be.yapock.caninecompanion.dal.models.Weight;
 import be.yapock.caninecompanion.dal.repositories.DogRepository;
 import be.yapock.caninecompanion.dal.models.Weight;
+import be.yapock.caninecompanion.dal.models.Weight;
 import be.yapock.caninecompanion.dal.repositories.WeightRepository;
 import be.yapock.caninecompanion.pl.models.weight.WeightForm;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,6 +12,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+
+import java.util.List;
 
 @Service
 public class WeightServiceImpl implements WeightService {
@@ -48,5 +51,16 @@ public class WeightServiceImpl implements WeightService {
     @Override
     public Weight getOne(long id) {
         return weightRepository.findLastByDog_Id(id).orElseThrow(()->new EntityNotFoundException("Chien pas trouvé"));
+    }
+
+    /**
+     * Retrieves all weight records for a specific dog.
+     *
+     * @param id the ID of the dog
+     * @return a list of weight records for the specified dog
+     */
+    @Override
+    public List<Weight> getAll(long id) {
+        return weightRepository.findAllByDog_Id(id);
     }
 }
