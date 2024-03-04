@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,5 +53,12 @@ class DogServiceImplTest {
         Exception exception = assertThrows(IllegalArgumentException.class, ()-> dogService.create(null));
 
         assertEquals("Le formulaire ne peut être vide", exception.getMessage());
+    }
+
+    @Test
+    void delete_ok(){
+        dogService.delete(1L);
+
+        verify(dogRepository, times(1)).deleteById(eq(1L));
     }
 }
