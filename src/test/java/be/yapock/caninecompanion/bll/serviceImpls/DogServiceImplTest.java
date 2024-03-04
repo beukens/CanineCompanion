@@ -4,14 +4,18 @@ import be.yapock.caninecompanion.dal.models.Dog;
 import be.yapock.caninecompanion.dal.repositories.DogRepository;
 import be.yapock.caninecompanion.pl.models.dog.DogCreateForm;
 import jakarta.persistence.EntityNotFoundException;
+import be.yapock.caninecompanion.pl.models.dog.DogSearchForm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,6 +31,7 @@ class DogServiceImplTest {
 
     private DogCreateForm createForm;
     private Dog dog;
+    private DogSearchForm searchForm;
 
     @BeforeEach
     void setUp(){
@@ -38,6 +43,7 @@ class DogServiceImplTest {
                 .sex(createForm.sex())
                 .isSterilized(createForm.isSterilized())
                 .build();
+        searchForm= new DogSearchForm("");
     }
 
     @Test
@@ -72,5 +78,14 @@ class DogServiceImplTest {
         Exception exception = assertThrows(EntityNotFoundException.class, ()-> dogService.getDogById(1L));
 
         assertEquals("Chien pas trouvé", exception.getMessage());
+    }
+
+    @Test
+    void getAll_ok(){
+        when(dogRepository.findAll(any(Specification.class))).thenReturn(Collections.singletonList(dog));
+
+        List<Dog> dogs = dogService.search(searchForm);
+        assertEquals(1, dogs.size());
+        assertEquals(dog, dogs.get(0));
     }
 }
