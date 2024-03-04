@@ -2,6 +2,8 @@ package be.yapock.caninecompanion.pl.controllers;
 
 import be.yapock.caninecompanion.bll.DogService;
 import be.yapock.caninecompanion.dal.models.Dog;
+import be.yapock.caninecompanion.pl.models.dog.DogFullDTO;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +27,7 @@ public class DogController {
      */
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_HELPER') || hasRole('ROLE_INTERN')")
-    public Dog getDogById(@PathVariable Long id) {
-        return dogService.getDogById(id);
+    public ResponseEntity<DogFullDTO> getDogById(@PathVariable Long id) {
+        return ResponseEntity.ok(DogFullDTO.fromEntity(dogService.getDogById(id)));
     }
 }
