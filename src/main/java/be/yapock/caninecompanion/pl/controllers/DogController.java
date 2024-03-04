@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import java.util.List;
+import be.yapock.caninecompanion.pl.models.dog.DogCreateForm;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/dog")
@@ -91,5 +93,16 @@ public class DogController {
         return ResponseEntity.ok(dogService.findAllByOwner(id).stream()
                 .map(DogShortDTO::fromEntity)
                 .toList());
+    }
+
+    /**
+     * Updates the information of a dog with the specified ID.
+     *
+     * @param form The updated information of the dog as a {@link DogCreateForm} object.
+     * @param id   The ID of the dog to be updated.
+     */
+    @PutMapping("/{id}")
+    public void update(@RequestBody DogCreateForm form, @PathVariable long id){
+        dogService.update(form, id);
     }
 }

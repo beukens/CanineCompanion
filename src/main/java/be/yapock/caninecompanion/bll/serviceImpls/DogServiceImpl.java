@@ -71,4 +71,24 @@ public class DogServiceImpl implements DogService {
     public List<Dog> findAllByOwner(long id) {
         return dogRepository.findAllByOwner(id);
     }
+
+    /**
+     * Updates the information of a dog with the provided form and id.
+     *
+     * @param form The form containing the updated information for the dog. Cannot be null.
+     * @param id   The id of the dog to be updated.
+     * @throws IllegalArgumentException If the form is null or if the dog with the provided id does not exist.
+     */
+    @Override
+    public void update(DogCreateForm form, long id) {
+        if (form==null) throw new IllegalArgumentException("Le formulaire ne peut être Vide");
+        Dog dog = dogRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Le chien avec l'ID " + id + " n'existe pas"));
+        dog.setFirstName(form.firstName());
+        dog.setLastName(form.lastName());
+        dog.setDateOfBirth(form.dateOfBirth());
+        dog.setSex(form.sex());
+        dog.setSterilized(form.isSterilized());
+        dogRepository.save(dog);
+    }
 }
