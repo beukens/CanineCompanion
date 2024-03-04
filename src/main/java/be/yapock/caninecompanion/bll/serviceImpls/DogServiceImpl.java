@@ -3,9 +3,13 @@ package be.yapock.caninecompanion.bll.serviceImpls;
 import be.yapock.caninecompanion.bll.DogService;
 import be.yapock.caninecompanion.dal.models.Dog;
 import be.yapock.caninecompanion.dal.repositories.DogRepository;
+import be.yapock.caninecompanion.dal.repositories.SpecificationBuilder;
 import be.yapock.caninecompanion.pl.models.dog.DogCreateForm;
 import jakarta.persistence.EntityNotFoundException;
+import be.yapock.caninecompanion.pl.models.dog.DogSearchForm;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class DogServiceImpl implements DogService {
@@ -44,5 +48,16 @@ public class DogServiceImpl implements DogService {
     @Override
     public Dog getDogById(Long id) {
         return dogRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Chien pas trouvé"));
+    }
+
+    /**
+     * Searches for dogs based on the provided search form.
+     *
+     * @param form The search form containing the criteria for the search.
+     * @return A list of dogs that match the search criteria.
+     */
+    @Override
+    public List<Dog> search(DogSearchForm form) {
+        return dogRepository.findAll(SpecificationBuilder.specificationBuilder(form));
     }
 }
