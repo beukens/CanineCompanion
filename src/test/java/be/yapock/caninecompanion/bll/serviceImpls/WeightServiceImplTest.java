@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -76,6 +75,20 @@ class WeightServiceImplTest {
 
         Exception exception = assertThrows(EntityNotFoundException.class, () -> weightService.create(form));
 
+        assertEquals("Chien pas trouvé", exception.getMessage());
+    }
+
+    @Test
+    void getOne_ok(){
+        when(weightRepository.findLastByDog_Id(anyLong())).thenReturn(Optional.of(weight));
+        Weight result = weightService.getOne(1L);
+        assertEquals(weight, result);
+    }
+
+    @Test
+    void getOne_ko_notFound(){
+        when(weightRepository.findLastByDog_Id(anyLong())).thenReturn(Optional.empty());
+        Exception exception = assertThrows(EntityNotFoundException.class, ()-> weightService.getOne(1L));
         assertEquals("Chien pas trouvé", exception.getMessage());
     }
 }
