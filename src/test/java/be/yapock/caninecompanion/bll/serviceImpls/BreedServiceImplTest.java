@@ -21,6 +21,10 @@ import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 @ExtendWith(MockitoExtension.class)
 class BreedServiceImplTest {
     @Mock
@@ -61,5 +65,11 @@ class BreedServiceImplTest {
         when(breedRepository.findById(1L)).thenReturn(Optional.of(breed));
         Breed result= breedService.getOne(1L);
         assertEquals(breed, result);
+    }
+
+    @Test
+    void delete_ok(){
+        breedService.delete(1L);
+        verify(breedRepository, times(1)).deleteById(anyLong());
     }
 }

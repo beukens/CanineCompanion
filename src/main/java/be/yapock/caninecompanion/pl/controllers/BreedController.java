@@ -6,6 +6,7 @@ import be.yapock.caninecompanion.pl.models.breed.BreedForm;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/breed")
@@ -30,5 +31,15 @@ public class BreedController {
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_HELPER')")
     public void create(@RequestBody BreedForm form){
         breedService.create(form);
+    }
+
+    /**
+     * Deletes a Breed by its ID.
+     *
+     * @param id The ID of the Breed to be deleted.
+     */
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable long id){
+        breedService.delete(id);
     }
 }

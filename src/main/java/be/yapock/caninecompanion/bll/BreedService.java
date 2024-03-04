@@ -6,4 +6,5 @@ import be.yapock.caninecompanion.pl.models.breed.BreedForm;
 public interface BreedService {
     Breed getOne(long id);
     void create(BreedForm form);
+    void delete(long id);
 }
