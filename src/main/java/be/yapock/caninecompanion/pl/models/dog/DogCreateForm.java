@@ -13,6 +13,7 @@ public record DogCreateForm(
         LocalDate dateOfBirth,
         @NotNull @NotBlank
         String sex,
-        boolean isSterilized
+        boolean isSterilized,
+        long breedId
 ) {
 }

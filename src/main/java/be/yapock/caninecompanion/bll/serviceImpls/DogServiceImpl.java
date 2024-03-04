@@ -2,6 +2,7 @@ package be.yapock.caninecompanion.bll.serviceImpls;
 
 import be.yapock.caninecompanion.bll.DogService;
 import be.yapock.caninecompanion.dal.models.Dog;
+import be.yapock.caninecompanion.dal.repositories.BreedRepository;
 import be.yapock.caninecompanion.dal.repositories.DogRepository;
 import be.yapock.caninecompanion.dal.repositories.SpecificationBuilder;
 import be.yapock.caninecompanion.pl.models.dog.DogCreateForm;
@@ -14,9 +15,11 @@ import java.util.List;
 @Service
 public class DogServiceImpl implements DogService {
     private final DogRepository dogRepository;
+    private final BreedRepository breedRepository;
 
-    public DogServiceImpl(DogRepository dogRepository) {
+    public DogServiceImpl(DogRepository dogRepository, BreedRepository breedRepository) {
         this.dogRepository = dogRepository;
+        this.breedRepository = breedRepository;
     }
 
     /**
@@ -34,6 +37,7 @@ public class DogServiceImpl implements DogService {
                 .isSterilized(form.isSterilized())
                 .dateOfBirth(form.dateOfBirth())
                 .sex(form.sex())
+                .breed(breedRepository.findById(form.breedId()).orElseThrow(()-> new EntityNotFoundException("race non trouvée")))
                 .build();
         dogRepository.save(dog);
     }
@@ -89,6 +93,7 @@ public class DogServiceImpl implements DogService {
         dog.setDateOfBirth(form.dateOfBirth());
         dog.setSex(form.sex());
         dog.setSterilized(form.isSterilized());
+        dog.setBreed(breedRepository.findById(form.breedId()).orElseThrow(()-> new EntityNotFoundException("race non trouvée")));
         dogRepository.save(dog);
     }
 

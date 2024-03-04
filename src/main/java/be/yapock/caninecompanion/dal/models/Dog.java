@@ -25,5 +25,8 @@ public class Dog {
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private Person owner;
-
+    @ManyToOne
+    @Setter
+    @JoinColumn(name = "breed_id")
+    private Breed breed;
 }

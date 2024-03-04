@@ -9,7 +9,8 @@ public record DogFullDTO(
         String lastName,
         LocalDate dateOfBirth,
         String sexe,
-        boolean isSterilized
+        boolean isSterilized,
+        long breedId
 ) {
     public static DogFullDTO fromEntity(Dog dog){
         return new DogFullDTO(
@@ -17,7 +18,8 @@ public record DogFullDTO(
                 dog.getLastName(),
                 dog.getDateOfBirth(),
                 dog.getSex(),
-                dog.isSterilized()
+                dog.isSterilized(),
+                dog.getBreed().getId()
         );
     }
 }
