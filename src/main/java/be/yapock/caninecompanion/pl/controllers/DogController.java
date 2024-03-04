@@ -2,10 +2,12 @@ package be.yapock.caninecompanion.pl.controllers;
 
 import be.yapock.caninecompanion.bll.DogService;
 import be.yapock.caninecompanion.pl.models.dog.DogCreateForm;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import be.yapock.caninecompanion.pl.models.dog.DogSearchForm;
+import be.yapock.caninecompanion.pl.models.dog.DogShortDTO;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/dog")
@@ -24,5 +26,18 @@ public class DogController {
     @PostMapping("/")
     public void createDog(@RequestBody DogCreateForm form) {
         dogService.create(form);
+    }
+
+    /**
+     * Searches for dogs based on the provided search criteria.
+     *
+     * @param form the search criteria form
+     * @return a ResponseEntity containing a list of DogShortDTO objects
+     */
+    @PostMapping("/search")
+    public ResponseEntity<List<DogShortDTO>> search(DogSearchForm form){
+        return ResponseEntity.ok(dogService.search(form).stream()
+                .map(DogShortDTO::fromEntity)
+                .toList());
     }
 }
