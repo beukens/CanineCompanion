@@ -17,4 +17,14 @@ public class DogServiceImpl implements DogService {
     public void create(DogCreateForm form) {
 
     }
+
+    /**
+     * Deletes a dog with the specified ID.
+     *
+     * @param id the ID of the dog to delete
+     */
+    @Override
+    public void delete(long id) {
+        dogRepository.deleteById(id);
+    }
 }
