@@ -81,9 +81,9 @@ public class DogServiceImpl implements DogService {
      */
     @Override
     public void update(DogCreateForm form, long id) {
-        if (form==null) throw new IllegalArgumentException("Le formulaire ne peut être Vide");
+        if (form==null) throw new IllegalArgumentException("Le formulaire ne peut être vide");
         Dog dog = dogRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Le chien avec l'ID " + id + " n'existe pas"));
+                .orElseThrow(() -> new EntityNotFoundException("Le chien avec l'ID " + id + " n'existe pas"));
         dog.setFirstName(form.firstName());
         dog.setLastName(form.lastName());
         dog.setDateOfBirth(form.dateOfBirth());

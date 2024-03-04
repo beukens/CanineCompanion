@@ -63,6 +63,32 @@ class DogServiceImplTest {
     }
 
     @Test
+    void update_ok(){
+        when(dogRepository.findById(anyLong())).thenReturn(Optional.of(dog));
+        when(dogRepository.save(any())).thenReturn(dog);
+
+        dogService.update(createForm, anyLong());
+        verify(dogRepository, times(1)).save(any(Dog.class));
+    }
+
+    @Test
+    void update_ko_dogNotFound(){
+        long id = 1L;
+        when(dogRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(EntityNotFoundException.class, ()-> dogService.update(createForm, 1L));
+
+        assertEquals("Le chien avec l'ID " + id + " n'existe pas", exception.getMessage());
+    }
+
+    @Test
+    void upddate_ko_FormNull(){
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> dogService.update(null, 1L));
+
+        assertEquals("Le formulaire ne peut être vide", exception.getMessage());
+    }
+
+    @Test
     void getOne_ok(){
         when(dogRepository.findById(anyLong())).thenReturn(Optional.of(dog));
 
