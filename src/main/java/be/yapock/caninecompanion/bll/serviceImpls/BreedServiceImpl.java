@@ -3,6 +3,7 @@ package be.yapock.caninecompanion.bll.serviceImpls;
 import be.yapock.caninecompanion.bll.BreedService;
 import be.yapock.caninecompanion.dal.models.Breed;
 import be.yapock.caninecompanion.dal.repositories.BreedRepository;
+import be.yapock.caninecompanion.pl.models.breed.BreedForm;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,5 +23,23 @@ public class BreedServiceImpl implements BreedService {
     @Override
     public Breed getOne(long id) {
         return breedRepository.getOne(id);
+    }
+
+    /**
+     * Creates a new Breed object based on the provided form and saves it to the breed repository.
+     *
+     * @param form the BreedForm object representing the data of the new breed to create
+     * @throws IllegalArgumentException if the form is null
+     */
+    @Override
+    public void create(BreedForm form) {
+        if (form==null) throw new IllegalArgumentException("le Formulaire ne peut être vide");
+        Breed breed = Breed.builder()
+                .name(form.name())
+                .raceGroup(form.raceGroup())
+                .size(form.size())
+                .temperament(form.temperament())
+                .build();
+        breedRepository.save(breed);
     }
 }
