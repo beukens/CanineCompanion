@@ -60,4 +60,15 @@ public class DogServiceImpl implements DogService {
     public List<Dog> search(DogSearchForm form) {
         return dogRepository.findAll(SpecificationBuilder.specificationBuilder(form));
     }
+
+    /**
+     * Find all dogs owned by the given owner.
+     *
+     * @param id the ID of the owner
+     * @return a list of Dog objects owned by the given owner
+     */
+    @Override
+    public List<Dog> findAllByOwner(long id) {
+        return dogRepository.findAllByOwner(id);
+    }
 }

@@ -5,6 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public interface DogRepository extends JpaRepository<Dog, Long>, JpaSpecificationExecutor<Dog> {
+public interface DogRepository extends JpaRepository<Dog, Long> {
+    List<Dog> findAllByOwner(long id);
 }

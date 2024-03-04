@@ -1,9 +1,6 @@
 package be.yapock.caninecompanion.dal.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -24,5 +21,9 @@ public class Dog {
     String sex;
     @Setter
     boolean isSterilized;
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    Person owner;
 
 }

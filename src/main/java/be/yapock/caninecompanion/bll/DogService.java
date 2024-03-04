@@ -11,4 +11,5 @@ public interface DogService {
     Dog getDogById(Long id);
 
     List<Dog> search(DogSearchForm form);
+    List<Dog> findAllByOwner(long id);
 }
