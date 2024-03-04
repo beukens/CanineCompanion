@@ -13,4 +13,5 @@ public interface DogService {
     List<Dog> search(DogSearchForm form);
     List<Dog> findAllByOwner(long id);
     void update(DogCreateForm form, long id);
+    void delete(long id);
 }
