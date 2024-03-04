@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/breed")
 public class BreedController {
@@ -20,5 +22,17 @@ public class BreedController {
     @GetMapping("/{id}")
     public ResponseEntity<BreedDTO> getOne(@PathVariable long id){
         return ResponseEntity.ok(BreedDTO.fromEntity(breedService.getOne(id)));
+    }
+
+    /**
+     * Retrieves a list of all breeds.
+     *
+     * @return A ResponseEntity object containing a list of BreedDTO objects representing the breeds.
+     */
+    @GetMapping
+    public ResponseEntity<List<BreedDTO>> getAll(){
+        return ResponseEntity.ok(breedService.getAll().stream()
+                .map(BreedDTO::fromEntity)
+                .toList());
     }
 }
