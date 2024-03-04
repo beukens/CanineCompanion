@@ -3,16 +3,21 @@ package be.yapock.caninecompanion.bll.serviceImpls;
 import be.yapock.caninecompanion.dal.models.Dog;
 import be.yapock.caninecompanion.dal.models.Weight;
 import be.yapock.caninecompanion.dal.repositories.WeightRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 class WeightServiceImplTest {
     @Mock
@@ -38,5 +43,19 @@ class WeightServiceImplTest {
                 .sex("sex")
                 .isSterilized(true)
                 .build();
+    }
+
+    @Test
+    void getOne_ok(){
+        when(weightRepository.findLastByDog_Id(anyLong())).thenReturn(Optional.of(weight));
+        Weight result = weightService.getOne(1L);
+        assertEquals(weight, result);
+    }
+
+    @Test
+    void getOne_ko_notFound(){
+        when(weightRepository.findLastByDog_Id(anyLong())).thenReturn(Optional.empty());
+        Exception exception = assertThrows(EntityNotFoundException.class, ()-> weightService.getOne(1L));
+        assertEquals("Chien pas trouvé", exception.getMessage());
     }
 }

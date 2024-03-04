@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface WeightRepository extends JpaRepository<Weight, Long> {
-    Optional<Weight> findByDog_Id(long id);
+    Optional<Weight> findLastByDog_Id(long id);
 }

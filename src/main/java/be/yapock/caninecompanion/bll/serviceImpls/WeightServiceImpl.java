@@ -22,6 +22,6 @@ public class WeightServiceImpl implements WeightService {
      */
     @Override
     public Weight getOne(long id) {
-        return weightRepository.findByDog_Id(id).orElseThrow(()->new EntityNotFoundException("Chien pas trouvé"));
+        return weightRepository.findLastByDog_Id(id).orElseThrow(()->new EntityNotFoundException("Chien pas trouvé"));
     }
 }
