@@ -88,4 +88,14 @@ class DogServiceImplTest {
         assertEquals(1, dogs.size());
         assertEquals(dog, dogs.get(0));
     }
+
+    @Test
+    void findAllByOwner(){
+        when(dogRepository.findAllByOwner(anyLong())).thenReturn(Collections.singletonList(dog));
+
+        List<Dog> dogs = dogService.findAllByOwner(1L);
+
+        assertEquals(1, dogs.size());
+        assertEquals(dog, dogs.get(0));
+    }
 }
