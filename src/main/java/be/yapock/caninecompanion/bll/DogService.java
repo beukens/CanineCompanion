@@ -4,4 +4,5 @@ import be.yapock.caninecompanion.pl.models.dog.DogCreateForm;
 
 public interface DogService {
     void create(DogCreateForm form);
+    void update(DogCreateForm form, long id);
 }
