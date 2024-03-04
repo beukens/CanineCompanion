@@ -11,6 +11,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,5 +54,15 @@ class DogServiceImplTest {
         Exception exception = assertThrows(IllegalArgumentException.class, ()-> dogService.create(null));
 
         assertEquals("Le formulaire ne peut être vide", exception.getMessage());
+    }
+
+    @Test
+    void findAllByOwner(){
+        when(dogRepository.findAllByOwner(anyLong())).thenReturn(Collections.singletonList(dog));
+
+        List<Dog> dogs = dogService.findAllByOwner(1L);
+
+        assertEquals(1, dogs.size());
+        assertEquals(dog, dogs.get(0));
     }
 }
