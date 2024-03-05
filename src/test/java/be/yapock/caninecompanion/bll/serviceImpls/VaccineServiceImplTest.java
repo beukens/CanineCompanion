@@ -18,11 +18,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
+
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -90,5 +95,12 @@ class VaccineServiceImplTest {
         when(vaccineRepository.findById(anyLong())).thenReturn(Optional.empty());
         Exception exception = assertThrows(EntityNotFoundException.class, ()-> vaccineService.getOne(1L));
         assertEquals("Vaccin pas trouvé", exception.getMessage());
+    }
+
+    @Test
+    void getAllByDog_ok(){
+        when(vaccineRepository.findAllByDog_Id(anyLong())).thenReturn(Collections.singletonList(vaccine));
+        List<Vaccine> result = vaccineService.gateAllByDog(1L);
+        assertEquals(Collections.singletonList(vaccine), result);
     }
 }

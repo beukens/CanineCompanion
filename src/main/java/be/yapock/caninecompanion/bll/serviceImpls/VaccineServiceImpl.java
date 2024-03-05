@@ -5,11 +5,14 @@ import be.yapock.caninecompanion.dal.models.Vaccine;
 import be.yapock.caninecompanion.dal.models.enums.Disease;
 import be.yapock.caninecompanion.dal.repositories.DogRepository;
 import be.yapock.caninecompanion.dal.models.Vaccine;
+import be.yapock.caninecompanion.dal.models.Vaccine;
 import be.yapock.caninecompanion.dal.repositories.VaccineRepository;
 import be.yapock.caninecompanion.pl.models.vaccine.VaccineForm;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class VaccineServiceImpl implements VaccineService {
@@ -45,5 +48,10 @@ public class VaccineServiceImpl implements VaccineService {
     @Override
     public Vaccine getOne(long id) {
         return vaccineRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Vaccin pas trouvé"));
+    }
+
+    @Override
+    public List<Vaccine> gateAllByDog(long id) {
+        return vaccineRepository.findAllByDog_Id(id);
     }
 }
