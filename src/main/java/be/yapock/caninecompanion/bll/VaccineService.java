@@ -12,4 +12,5 @@ public interface VaccineService {
     void create(VaccineForm form);
     Vaccine getOne(long id);
     List<Vaccine> gateAllByDog(long id);
+    void delete(long id);
 }

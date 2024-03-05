@@ -32,6 +32,9 @@ import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 @ExtendWith(MockitoExtension.class)
 class VaccineServiceImplTest {
     @Mock
@@ -102,5 +105,11 @@ class VaccineServiceImplTest {
         when(vaccineRepository.findAllByDog_Id(anyLong())).thenReturn(Collections.singletonList(vaccine));
         List<Vaccine> result = vaccineService.gateAllByDog(1L);
         assertEquals(Collections.singletonList(vaccine), result);
+    }
+
+    @Test
+    void delete_ok(){
+        vaccineService.delete(1L);
+        verify(vaccineRepository, times(1)).deleteById(1L);
     }
 }

@@ -54,4 +54,9 @@ public class VaccineServiceImpl implements VaccineService {
     public List<Vaccine> gateAllByDog(long id) {
         return vaccineRepository.findAllByDog_Id(id);
     }
+
+    @Override
+    public void delete(long id) {
+        vaccineRepository.deleteById(id);
+    }
 }
