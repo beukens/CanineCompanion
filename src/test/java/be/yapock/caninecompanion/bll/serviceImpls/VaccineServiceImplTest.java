@@ -8,6 +8,7 @@ import be.yapock.caninecompanion.dal.repositories.DogRepository;
 import be.yapock.caninecompanion.dal.repositories.VaccineRepository;
 import be.yapock.caninecompanion.pl.models.vaccine.VaccineForm;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +23,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
+
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class VaccineServiceImplTest {
@@ -70,5 +74,21 @@ class VaccineServiceImplTest {
         when(dogRepository.findById(anyLong())).thenReturn(Optional.empty());
         Exception exception = assertThrows(EntityNotFoundException.class, ()->vaccineService.create(form));
         assertEquals("Chien pas trouvé", exception.getMessage());
+    }
+
+    @Test
+    void getOne_ok(){
+        when(vaccineRepository.findById(anyLong())).thenReturn(Optional.of(vaccine));
+
+        Vaccine result = vaccineService.getOne(1L);
+
+        assertEquals(result, vaccine);
+    }
+
+    @Test
+    void getOne_ko(){
+        when(vaccineRepository.findById(anyLong())).thenReturn(Optional.empty());
+        Exception exception = assertThrows(EntityNotFoundException.class, ()-> vaccineService.getOne(1L));
+        assertEquals("Vaccin pas trouvé", exception.getMessage());
     }
 }
