@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import be.yapock.caninecompanion.pl.models.vaccine.VaccineUpdateForm;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -49,5 +51,10 @@ public class VaccineController {
     @DeleteMapping("/{id}")
     public void delete(long id){
         vaccineService.delete(id);
+    }
+
+    @PutMapping("/{id}")
+    public void update(@RequestBody VaccineUpdateForm form, @PathVariable long id){
+        vaccineService.update(form, id);
     }
 }

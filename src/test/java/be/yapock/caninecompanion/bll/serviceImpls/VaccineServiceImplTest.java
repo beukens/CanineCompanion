@@ -9,6 +9,8 @@ import be.yapock.caninecompanion.dal.repositories.VaccineRepository;
 import be.yapock.caninecompanion.pl.models.vaccine.VaccineForm;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
+import be.yapock.caninecompanion.pl.models.vaccine.VaccineUpdateForm;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +22,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,6 +37,10 @@ import static org.mockito.Mockito.when;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class VaccineServiceImplTest {
@@ -111,5 +118,26 @@ class VaccineServiceImplTest {
     void delete_ok(){
         vaccineService.delete(1L);
         verify(vaccineRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void update_ok(){
+        when(vaccineRepository.findById(anyLong())).thenReturn(Optional.of(vaccine));
+        when(vaccineRepository.save(any(Vaccine.class))).thenReturn(vaccine);
+        vaccineService.update(new VaccineUpdateForm(LocalDate.now()), 1L);
+        verify(vaccineRepository, times(1)).save(any());
+    }
+
+    @Test
+    void update_ko_formNull(){
+        Exception exception = assertThrows(IllegalArgumentException.class, ()-> vaccineService.update(null, 1L));
+        assertEquals("Le formulaire ne peut être null", exception.getMessage());
+    }
+
+    @Test
+    void update_ko_vaccineNotFound(){
+        when(vaccineRepository.findById(anyLong())).thenReturn(Optional.empty());
+        Exception exception = assertThrows(EntityNotFoundException.class, ()-> vaccineService.update(new VaccineUpdateForm(LocalDate.now()),1L));
+        assertEquals("Vaccin pas trouvé", exception.getMessage());
     }
 }
