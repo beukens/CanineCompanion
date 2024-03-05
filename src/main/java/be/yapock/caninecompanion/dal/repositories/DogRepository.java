@@ -10,5 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface DogRepository extends JpaRepository<Dog, Long>, JpaSpecificationExecutor<Dog>{
-    List<Dog> findAllByOwner(long id);
+    List<Dog> findAllByOwner_Id(long id);
 }

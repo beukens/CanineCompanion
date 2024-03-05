@@ -35,7 +35,7 @@ class DogServiceImplTest {
 
     @BeforeEach
     void setUp(){
-        createForm = new DogCreateForm("John", "Doe", LocalDate.now(), "Male", true,1L);
+        createForm = new DogCreateForm("John", "Doe", LocalDate.now(), "Male", true,1L, 2L);
         dog = Dog.builder()
                 .firstName(createForm.firstName())
                 .lastName(createForm.lastName())
@@ -117,7 +117,7 @@ class DogServiceImplTest {
 
     @Test
     void findAllByOwner(){
-        when(dogRepository.findAllByOwner(anyLong())).thenReturn(Collections.singletonList(dog));
+        when(dogRepository.findAllByOwner_Id(anyLong())).thenReturn(Collections.singletonList(dog));
 
         List<Dog> dogs = dogService.findAllByOwner(1L);
 

@@ -14,6 +14,7 @@ public record DogCreateForm(
         @NotNull @NotBlank
         String sex,
         boolean isSterilized,
-        long breedId
+        long breedId,
+        long ownerId
 ) {
 }
