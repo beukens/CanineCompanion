@@ -8,7 +8,7 @@ public record DogFullDTO(
         String firstName,
         String lastName,
         LocalDate dateOfBirth,
-        String sexe,
+        String sex,
         boolean isSterilized,
         long breedId
 ) {
