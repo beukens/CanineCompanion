@@ -1,16 +1,10 @@
 package be.yapock.caninecompanion.dal.utils;
 
-import be.yapock.caninecompanion.dal.models.Breed;
-import be.yapock.caninecompanion.dal.models.Dog;
-import be.yapock.caninecompanion.dal.models.Person;
-import be.yapock.caninecompanion.dal.models.User;
+import be.yapock.caninecompanion.dal.models.*;
 import be.yapock.caninecompanion.dal.models.enums.DogSize;
 import be.yapock.caninecompanion.dal.models.enums.RaceGroup;
 import be.yapock.caninecompanion.dal.models.enums.UserRole;
-import be.yapock.caninecompanion.dal.repositories.BreedRepository;
-import be.yapock.caninecompanion.dal.repositories.DogRepository;
-import be.yapock.caninecompanion.dal.repositories.PersonRepository;
-import be.yapock.caninecompanion.dal.repositories.UserRepository;
+import be.yapock.caninecompanion.dal.repositories.*;
 import net.datafaker.Faker;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,16 +22,18 @@ public class DataInit implements InitializingBean {
     private final PasswordEncoder passwordEncoder;
     private final DogRepository dogRepository;
     private final BreedRepository breedRepository;
+    private final WeightRepository weightRepository;
 
     @Value("${api.data-init}")
     private boolean insertion;
 
-    public DataInit(PersonRepository personRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, DogRepository dogRepository, BreedRepository breedRepository) {
+    public DataInit(PersonRepository personRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, DogRepository dogRepository, BreedRepository breedRepository, WeightRepository weightRepository) {
         this.personRepository = personRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.dogRepository = dogRepository;
         this.breedRepository = breedRepository;
+        this.weightRepository = weightRepository;
     }
 
     @Override
@@ -95,7 +91,14 @@ public class DataInit implements InitializingBean {
                         .build();
                 dogRepository.save(dog);
             }
-
+            for (int i = 0; i < 10; i++) {
+                Weight weight = Weight.builder()
+                        .weight(2.5)
+                        .date(LocalDate.now())
+                        .dog(dogRepository.findById(i+1L).get())
+                        .build();
+                weightRepository.save(weight);
+            }
             User user = User.builder()
                     .username("admin")
                     .isEnabled(true)

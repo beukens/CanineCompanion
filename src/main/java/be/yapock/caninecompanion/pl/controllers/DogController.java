@@ -85,9 +85,9 @@ public class DogController {
      */
     @GetMapping("/all/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_HELPER') || hasRole('ROLE_INTERN') || #id== authentication.principal.id")
-    public ResponseEntity<List<DogShortDTO>> findAllByOwner(@PathVariable @P("id") long id){
+    public ResponseEntity<List<DogFullDTO>> findAllByOwner(@PathVariable @P("id") long id){
         return ResponseEntity.ok(dogService.findAllByOwner(id).stream()
-                .map(DogShortDTO::fromEntity)
+                .map(DogFullDTO::fromEntity)
                 .toList());
     }
 
