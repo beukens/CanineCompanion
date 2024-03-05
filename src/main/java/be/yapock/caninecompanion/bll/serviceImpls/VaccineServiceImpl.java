@@ -11,4 +11,9 @@ public class VaccineServiceImpl implements VaccineService {
     public VaccineServiceImpl(VaccineRepository vaccineRepository) {
         this.vaccineRepository = vaccineRepository;
     }
+
+    @Override
+    public void delete(long id) {
+        vaccineRepository.deleteById(id);
+    }
 }

@@ -6,6 +6,7 @@ import be.yapock.caninecompanion.dal.models.Vaccine;
 import be.yapock.caninecompanion.dal.models.enums.Disease;
 import be.yapock.caninecompanion.dal.repositories.VaccineRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -14,6 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 @ExtendWith(MockitoExtension.class)
 class VaccineServiceImplTest {
     @Mock
@@ -33,5 +37,11 @@ class VaccineServiceImplTest {
                 .dog(dog)
                 .frequencies(0.5)
                 .build();
+    }
+
+    @Test
+    void delete_ok(){
+        vaccineService.delete(1L);
+        verify(vaccineRepository, times(1)).deleteById(1L);
     }
 }
