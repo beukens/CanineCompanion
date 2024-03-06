@@ -71,7 +71,7 @@ public class DogController {
      */
     @PostMapping("/search")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_HELPER') || hasRole('ROLE_INTERN')")
-    public ResponseEntity<List<DogShortDTO>> search(DogSearchForm form){
+    public ResponseEntity<List<DogShortDTO>> search(@RequestBody DogSearchForm form){
         return ResponseEntity.ok(dogService.search(form).stream()
                 .map(DogShortDTO::fromEntity)
                 .toList());
