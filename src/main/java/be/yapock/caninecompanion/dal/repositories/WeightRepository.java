@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface WeightRepository extends JpaRepository<Weight, Long> {
-    Optional<Weight> findLastByDog_Id(long id);
+    Optional<Weight> findFirstByDog_IdOrderByDateDesc(long id);
     List<Weight> findAllByDog_Id(long id);
 }

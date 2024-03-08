@@ -43,13 +43,13 @@ public class VaccineController {
     }
 
     @GetMapping("/all/{id}")
-    public ResponseEntity<List<VaccineShortDTO>> getAllByDog(long id){
-        return ResponseEntity.ok(vaccineService.gateAllByDog(id).stream()
+    public ResponseEntity<List<VaccineShortDTO>> getAllByDog(@PathVariable long id){
+        return ResponseEntity.ok(vaccineService.getAllByDog(id).stream()
                 .map(VaccineShortDTO::fromEntity)
                 .toList());
     }
     @DeleteMapping("/{id}")
-    public void delete(long id){
+    public void delete(@PathVariable long id){
         vaccineService.delete(id);
     }
 

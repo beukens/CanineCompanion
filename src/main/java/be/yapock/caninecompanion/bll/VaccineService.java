@@ -13,7 +13,7 @@ import be.yapock.caninecompanion.pl.models.vaccine.VaccineUpdateForm;
 public interface VaccineService {
     void create(VaccineForm form);
     Vaccine getOne(long id);
-    List<Vaccine> gateAllByDog(long id);
+    List<Vaccine> getAllByDog(Long id);
     void delete(long id);
     void update(VaccineUpdateForm form, long id);
 }

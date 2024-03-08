@@ -2,8 +2,11 @@ package be.yapock.caninecompanion.pl.models.dog;
 
 import be.yapock.caninecompanion.dal.models.Dog;
 import be.yapock.caninecompanion.pl.models.breed.BreedDTO;
+import be.yapock.caninecompanion.pl.models.person.PersonShortDTO;
+import be.yapock.caninecompanion.pl.models.weight.WeightAllDTO;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record DogFullDTO(
         long id,
@@ -12,7 +15,9 @@ public record DogFullDTO(
         LocalDate dateOfBirth,
         String sex,
         boolean isSterilized,
-        BreedDTO breed
+        BreedDTO breed,
+        PersonShortDTO owner,
+        List<WeightAllDTO> weighthistory
 ) {
     public static DogFullDTO fromEntity(Dog dog){
         return new DogFullDTO(
@@ -22,7 +27,11 @@ public record DogFullDTO(
                 dog.getDateOfBirth(),
                 dog.getSex(),
                 dog.isSterilized(),
-                BreedDTO.fromEntity(dog.getBreed())
+                BreedDTO.fromEntity(dog.getBreed()),
+                PersonShortDTO.fromEntity(dog.getOwner()),
+                dog.getWeights().stream()
+                        .map(WeightAllDTO::fromEntity)
+                        .toList()
         );
     }
 }

@@ -1,20 +1,17 @@
 package be.yapock.caninecompanion.pl.controllers;
 
 import be.yapock.caninecompanion.bll.DogService;
+import be.yapock.caninecompanion.pl.models.dog.*;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import be.yapock.caninecompanion.pl.models.dog.DogCreateForm;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import be.yapock.caninecompanion.pl.models.dog.DogFullDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
-import be.yapock.caninecompanion.pl.models.dog.DogShortDTO;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import be.yapock.caninecompanion.pl.models.dog.DogSearchForm;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -99,7 +96,7 @@ public class DogController {
      */
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_HELPER')")
-    public void update(@RequestBody DogCreateForm form, @PathVariable long id){
+    public void update(@RequestBody DogUpdateForm form, @PathVariable long id){
         dogService.update(form, id);
     }
 }

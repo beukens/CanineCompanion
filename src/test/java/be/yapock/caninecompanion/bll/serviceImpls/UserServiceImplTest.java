@@ -18,9 +18,11 @@ import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-
+@ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
@@ -91,7 +93,7 @@ class UserServiceImplTest {
 
     @Test
     void sendCreateInvitation_ok() throws MessagingException {
-        when(personRepository.findById(anyLong())).thenReturn(Optional.of(person));
+        when(personRepository.findById(1L)).thenReturn(Optional.of(person));
         when(userTokenRepository.save(any())).thenReturn(userToken);
 
         userService.sendCreateInvitation(1L);

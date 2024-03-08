@@ -3,6 +3,7 @@ package be.yapock.caninecompanion.bll.serviceImpls;
 import be.yapock.caninecompanion.dal.models.Dog;
 import be.yapock.caninecompanion.dal.repositories.DogRepository;
 import be.yapock.caninecompanion.pl.models.dog.DogCreateForm;
+import be.yapock.caninecompanion.pl.models.dog.DogUpdateForm;
 import jakarta.persistence.EntityNotFoundException;
 import be.yapock.caninecompanion.pl.models.dog.DogSearchForm;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +33,7 @@ class DogServiceImplTest {
     private DogCreateForm createForm;
     private Dog dog;
     private DogSearchForm searchForm;
+    private DogUpdateForm updateForm;
 
     @BeforeEach
     void setUp(){
@@ -43,6 +45,7 @@ class DogServiceImplTest {
                 .sex(createForm.sex())
                 .isSterilized(createForm.isSterilized())
                 .build();
+        updateForm= new DogUpdateForm(dog.getFirstName(),dog.getLastName(),dog.getDateOfBirth(),dog.getSex(),dog.isSterilized());
         searchForm= new DogSearchForm("");
     }
 
@@ -67,7 +70,7 @@ class DogServiceImplTest {
         when(dogRepository.findById(anyLong())).thenReturn(Optional.of(dog));
         when(dogRepository.save(any())).thenReturn(dog);
 
-        dogService.update(createForm, anyLong());
+        dogService.update(updateForm, anyLong());
         verify(dogRepository, times(1)).save(any(Dog.class));
     }
 
@@ -76,7 +79,7 @@ class DogServiceImplTest {
         long id = 1L;
         when(dogRepository.findById(1L)).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(EntityNotFoundException.class, ()-> dogService.update(createForm, 1L));
+        Exception exception = assertThrows(EntityNotFoundException.class, ()-> dogService.update(updateForm, 1L));
 
         assertEquals("Le chien avec l'ID " + id + " n'existe pas", exception.getMessage());
     }

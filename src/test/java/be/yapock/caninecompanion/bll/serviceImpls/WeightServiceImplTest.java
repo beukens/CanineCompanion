@@ -84,14 +84,14 @@ class WeightServiceImplTest {
 
     @Test
     void getOne_ok(){
-        when(weightRepository.findLastByDog_Id(anyLong())).thenReturn(Optional.of(weight));
+        when(weightRepository.findFirstByDog_IdOrderByDateDesc(anyLong())).thenReturn(Optional.of(weight));
         Weight result = weightService.getOne(1L);
         assertEquals(weight, result);
     }
 
     @Test
     void getOne_ko_notFound(){
-        when(weightRepository.findLastByDog_Id(anyLong())).thenReturn(Optional.empty());
+        when(weightRepository.findFirstByDog_IdOrderByDateDesc(anyLong())).thenReturn(Optional.empty());
         Exception exception = assertThrows(EntityNotFoundException.class, ()-> weightService.getOne(1L));
         assertEquals("Chien pas trouvé", exception.getMessage());
     }

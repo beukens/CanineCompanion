@@ -34,7 +34,7 @@ public class WeightServiceImpl implements WeightService {
         Weight weight = Weight.builder()
                 .date(LocalDate.now())
                 .dog(dogRepository.findById(form.dogId()).orElseThrow(()->new EntityNotFoundException("Chien pas trouvé")))
-                .weight(form.wheight())
+                .weight(form.weight())
                 .build();
         weightRepository.save(weight);
     }
@@ -47,7 +47,7 @@ public class WeightServiceImpl implements WeightService {
      */
     @Override
     public Weight getOne(long id) {
-        return weightRepository.findLastByDog_Id(id).orElseThrow(()->new EntityNotFoundException("Chien pas trouvé"));
+        return weightRepository.findFirstByDog_IdOrderByDateDesc(id).orElseThrow(()->new EntityNotFoundException("Chien pas trouvé"));
     }
 
     /**

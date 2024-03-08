@@ -7,6 +7,7 @@ import be.yapock.caninecompanion.dal.repositories.DogRepository;
 import be.yapock.caninecompanion.dal.repositories.PersonRepository;
 import be.yapock.caninecompanion.dal.repositories.SpecificationBuilder;
 import be.yapock.caninecompanion.pl.models.dog.DogCreateForm;
+import be.yapock.caninecompanion.pl.models.dog.DogUpdateForm;
 import jakarta.persistence.EntityNotFoundException;
 import be.yapock.caninecompanion.pl.models.dog.DogSearchForm;
 import org.springframework.stereotype.Service;
@@ -88,7 +89,7 @@ public class DogServiceImpl implements DogService {
      * @throws IllegalArgumentException If the form is null or if the dog with the provided id does not exist.
      */
     @Override
-    public void update(DogCreateForm form, long id) {
+    public void update(DogUpdateForm form, long id) {
         if (form==null) throw new IllegalArgumentException("Le formulaire ne peut être vide");
         Dog dog = dogRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Le chien avec l'ID " + id + " n'existe pas"));
@@ -97,7 +98,6 @@ public class DogServiceImpl implements DogService {
         dog.setDateOfBirth(form.dateOfBirth());
         dog.setSex(form.sex());
         dog.setSterilized(form.isSterilized());
-        dog.setBreed(breedRepository.findById(form.breedId()).orElseThrow(()-> new EntityNotFoundException("race non trouvée")));
         dogRepository.save(dog);
     }
 

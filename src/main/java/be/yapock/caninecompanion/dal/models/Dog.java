@@ -2,8 +2,12 @@ package be.yapock.caninecompanion.dal.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder @AllArgsConstructor @NoArgsConstructor
@@ -29,4 +33,7 @@ public class Dog {
     @Setter
     @JoinColumn(name = "breed_id")
     private Breed breed;
+    @OneToMany(mappedBy = "dog", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Weight> weights = new ArrayList<>();
 }

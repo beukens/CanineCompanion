@@ -110,7 +110,7 @@ class VaccineServiceImplTest {
     @Test
     void getAllByDog_ok(){
         when(vaccineRepository.findAllByDog_Id(anyLong())).thenReturn(Collections.singletonList(vaccine));
-        List<Vaccine> result = vaccineService.gateAllByDog(1L);
+        List<Vaccine> result = vaccineService.getAllByDog(1L);
         assertEquals(Collections.singletonList(vaccine), result);
     }
 
