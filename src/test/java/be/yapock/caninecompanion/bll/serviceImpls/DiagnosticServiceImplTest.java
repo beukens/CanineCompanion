@@ -31,6 +31,9 @@ import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 @ExtendWith(MockitoExtension.class)
 class DiagnosticServiceImplTest {
     @Mock
@@ -74,6 +77,12 @@ class DiagnosticServiceImplTest {
                 .submissivePosition(5)
                 .build();
         form = new DiagnosticForm(diagnostic.getSubmissivePosition(),diagnostic.getWithFamiliarHuman(), diagnostic.getWithStranger(), diagnostic.getWithDogs(), diagnostic.getWithOtherAnimals(), diagnostic.getStayingAlone(), diagnostic.getAffrayed(), diagnostic.getContactWHumans(), diagnostic.getContactWAnimals(), diagnostic.getAdaptability(), diagnostic.getAttachement(), diagnostic.getSeparation(), diagnostic.getRestPlace(), diagnostic.getAffrayed(), diagnostic.getAttachement(), diagnostic.getContactWHumans(),diagnostic.getJumpOnPeople(), diagnostic.getDestruct(),diagnostic.getScratchesBruises(), diagnostic.getExcitation(),diagnostic.getId());
+    }
+
+    @Test
+    void delete(){
+        diagnosticService.delete(1L);
+        verify(diagnosticRepository, times(1)).deleteById(1L);
     }
 
     @Test
