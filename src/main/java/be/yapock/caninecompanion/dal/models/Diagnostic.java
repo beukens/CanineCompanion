@@ -49,7 +49,7 @@ public class Diagnostic {
     @Column(nullable = false)
     private int vocalize;
     @Column(nullable = false)
-    private int jimpOnPeople;
+    private int jumpOnPeople;
     @Column(nullable = false)
     private int destruct;
     @Column(nullable = false)
