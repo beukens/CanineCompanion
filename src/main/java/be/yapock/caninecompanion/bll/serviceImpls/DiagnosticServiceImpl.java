@@ -11,4 +11,14 @@ public class DiagnosticServiceImpl implements DiagnosticService {
     public DiagnosticServiceImpl(DiagnosticRepository diagnosticRepository) {
         this.diagnosticRepository = diagnosticRepository;
     }
+
+    /**
+     * Deletes a diagnostic record by its ID.
+     *
+     * @param id the ID of the diagnostic record to be deleted
+     */
+    @Override
+    public void delete(long id) {
+        diagnosticRepository.deleteById(id);
+    }
 }
