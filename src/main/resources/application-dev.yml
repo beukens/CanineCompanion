@@ -27,3 +27,4 @@ server:
 
 api:
   data-init: true
+  cors: "*"
