@@ -21,6 +21,7 @@ public class Appointment {
     private LocalTime start;
     private LocalTime end;
     private boolean firstMeeting;
+    private String comment;
     @OneToMany
     private List<Dog> dogs;
     @OneToOne
