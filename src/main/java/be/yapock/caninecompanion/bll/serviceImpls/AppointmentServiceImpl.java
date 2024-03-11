@@ -97,4 +97,14 @@ public class AppointmentServiceImpl implements AppointmentService {
         else appointment.setEnd(LocalTime.now());
         appointmentRepository.save(appointment);
     }
+
+    /**
+     * Deletes an appointment by its ID.
+     *
+     * @param id The ID of the appointment to be deleted.
+     */
+    @Override
+    public void delete(long id) {
+        appointmentRepository.deleteById(id);
+    }
 }

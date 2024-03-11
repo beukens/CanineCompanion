@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -79,5 +81,15 @@ public class AppointmentController {
     @PostMapping("/{id}/startStop")
     public void startStopAppointment(@PathVariable long id) {
         appointmentService.startStop(id);
+    }
+
+    /**
+     * Deletes an appointment with the specified ID.
+     *
+     * @param id the ID of the appointment to delete
+     */
+    @DeleteMapping("/{id}")
+    public void deleteAppointment(@PathVariable long id) {
+        appointmentService.delete(id);
     }
 }

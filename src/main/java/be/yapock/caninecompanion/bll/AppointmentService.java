@@ -15,4 +15,5 @@ public interface AppointmentService {
     List<Appointment> getAllInFuture();
     List<Appointment> getAllByOwner(long id);
     void startStop(long id);
+    void delete(long id);
 }
