@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/diagnostic")
 public class DiagnosticController {
@@ -26,5 +28,18 @@ public class DiagnosticController {
     @GetMapping("/{id}")
     public ResponseEntity<DiagnosticDTO> getOne(@PathVariable long id){
         return ResponseEntity.ok(DiagnosticDTO.fromEntity(diagnosticService.getOne(id)));
+    }
+
+    /**
+     * Retrieves a list of DiagnosticDTO objects based on the given dog ID.
+     *
+     * @param id the ID of the dog
+     * @return the ResponseEntity containing a list of DiagnosticDTO objects, or a ResponseEntity with no body and a status code indicating the operation failure
+     */
+    @GetMapping("/dog/{id}")
+    public ResponseEntity<List<DiagnosticDTO>> getAllByDog(@PathVariable long id) {
+        return ResponseEntity.ok(diagnosticService.getAllByDog(id).stream()
+                .map(DiagnosticDTO::fromEntity)
+                .toList());
     }
 }

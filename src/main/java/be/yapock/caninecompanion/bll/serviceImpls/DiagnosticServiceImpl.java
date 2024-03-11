@@ -6,6 +6,8 @@ import be.yapock.caninecompanion.dal.repositories.DiagnosticRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DiagnosticServiceImpl implements DiagnosticService {
     private final DiagnosticRepository diagnosticRepository;
@@ -23,5 +25,16 @@ public class DiagnosticServiceImpl implements DiagnosticService {
     @Override
     public Diagnostic getOne(long id) {
         return diagnosticRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Diagnostique pas trouvé"));
+    }
+
+    /**
+     * Retrieves a list of Diagnostic objects associated with a Dog by its id.
+     *
+     * @param id the id of the Dog
+     * @return a list of Diagnostic objects associated with the Dog
+     */
+    @Override
+    public List<Diagnostic> getAllByDog(long id) {
+        return diagnosticRepository.findAllByDog_Id(id);
     }
 }
