@@ -6,15 +6,21 @@ import be.yapock.caninecompanion.dal.repositories.DiagnosticRepository;
 import be.yapock.caninecompanion.dal.repositories.DogRepository;
 import be.yapock.caninecompanion.pl.models.diagnostic.DiagnosticDTO;
 import be.yapock.caninecompanion.pl.models.diagnostic.DiagnosticForm;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 class DiagnosticServiceImplTest {
     @Mock
@@ -57,5 +63,20 @@ class DiagnosticServiceImplTest {
                 .submissivePosition(5)
                 .build();
         form = new DiagnosticForm(diagnostic.getSubmissivePosition(),diagnostic.getWithFamiliarHuman(), diagnostic.getWithStranger(), diagnostic.getWithDogs(), diagnostic.getWithOtherAnimals(), diagnostic.getStayingAlone(), diagnostic.getAffrayed(), diagnostic.getContactWHumans(), diagnostic.getContactWAnimals(), diagnostic.getAdaptability(), diagnostic.getAttachement(), diagnostic.getSeparation(), diagnostic.getRestPlace(), diagnostic.getAffrayed(), diagnostic.getAttachement(), diagnostic.getContactWHumans(),diagnostic.getJumpOnPeople(), diagnostic.getDestruct(),diagnostic.getScratchesBruises(), diagnostic.getExcitation(),diagnostic.getId());
+    }
+
+    @Test
+    void getOne_ok(){
+        when(diagnosticRepository.findById(anyLong())).thenReturn(Optional.of(diagnostic));
+
+        Diagnostic result = diagnosticService.getOne(1L);
+        assertEquals(diagnostic, result);
+    }
+
+    @Test
+    void getOne_ko(){
+        when(diagnosticRepository.findById((anyLong()))).thenReturn(Optional.empty());
+        Exception exception= assertThrows(EntityNotFoundException.class, ()-> diagnosticService.getOne(1L));
+        assertEquals("Diagnostique pas trouvé", exception.getMessage());
     }
 }
