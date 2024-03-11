@@ -33,4 +33,15 @@ public class AppointmentServiceImpl implements AppointmentService {
         LocalDateTime now = LocalDateTime.now();
         return appointmentRepository.findAllByScheduldedAfter(now);
     }
+
+    /**
+     * Retrieves all appointments owned by the specified owner.
+     *
+     * @param id the ID of the owner
+     * @return a list of Appointment objects representing the appointments owned by the specified owner
+     */
+    @Override
+    public List<Appointment> getAllByOwner(long id) {
+        return appointmentRepository.findAllByOwner_Id(id);
+    }
 }
