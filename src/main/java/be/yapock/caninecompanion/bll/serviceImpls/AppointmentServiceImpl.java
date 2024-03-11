@@ -17,4 +17,14 @@ public class AppointmentServiceImpl implements AppointmentService {
         this.dogRepository = dogRepository;
         this.personRepository = personRepository;
     }
+
+    /**
+     * Deletes an appointment by its ID.
+     *
+     * @param id The ID of the appointment to be deleted.
+     */
+    @Override
+    public void delete(long id) {
+        appointmentRepository.deleteById(id);
+    }
 }
