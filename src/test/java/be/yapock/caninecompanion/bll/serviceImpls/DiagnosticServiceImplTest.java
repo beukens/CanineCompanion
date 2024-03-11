@@ -7,6 +7,7 @@ import be.yapock.caninecompanion.dal.repositories.DogRepository;
 import be.yapock.caninecompanion.pl.models.diagnostic.DiagnosticDTO;
 import be.yapock.caninecompanion.pl.models.diagnostic.DiagnosticForm;
 import jakarta.persistence.EntityNotFoundException;
+import jdk.jshell.Diag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,11 +17,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
+
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -104,5 +110,12 @@ class DiagnosticServiceImplTest {
         when(dogRepository.findById(anyLong())).thenReturn(Optional.empty());
         Exception exception = assertThrows(EntityNotFoundException.class, ()->diagnosticService.create(form));
         assertEquals("pas trouvé le woof woof", exception.getMessage());
+    }
+
+    @Test
+    void getAllByDog(){
+        when(diagnosticRepository.findAllByDog_Id(anyLong())).thenReturn(Collections.singletonList(diagnostic));
+        List<Diagnostic> result = diagnosticService.getAllByDog(1L);
+        assertEquals(Collections.singletonList(diagnostic), result);
     }
 }
