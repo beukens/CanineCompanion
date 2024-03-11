@@ -10,6 +10,8 @@ import be.yapock.caninecompanion.pl.models.appointment.AppointmentAllDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -67,5 +69,15 @@ public class AppointmentController {
     @GetMapping("/{id}")
     public ResponseEntity<AppointmentOneDTO> getOne(@PathVariable long id){
         return ResponseEntity.ok(AppointmentOneDTO.fromEntity(appointmentService.getOne(id)));
+    }
+
+    /**
+     * Starts or stops an appointment with the specified ID.
+     *
+     * @param id the ID of the appointment to start or stop
+     */
+    @PostMapping("/{id}/startStop")
+    public void startStopAppointment(@PathVariable long id) {
+        appointmentService.startStop(id);
     }
 }

@@ -5,15 +5,20 @@ import be.yapock.caninecompanion.dal.models.Appointment;
 import be.yapock.caninecompanion.dal.models.Person;
 import be.yapock.caninecompanion.dal.models.Appointment;
 import be.yapock.caninecompanion.dal.models.Appointment;
+import be.yapock.caninecompanion.dal.models.Appointment;
 import be.yapock.caninecompanion.dal.repositories.AppointmentRepository;
 import be.yapock.caninecompanion.dal.repositories.DogRepository;
 import be.yapock.caninecompanion.dal.repositories.PersonRepository;
 import be.yapock.caninecompanion.pl.models.appointment.AppointmentForm;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -77,5 +82,19 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<Appointment> getAllByOwner(long id) {
         return appointmentRepository.findAllByOwner_Id(id);
+    }
+
+    /**
+     * This method starts or stops an appointment.
+     *
+     * @param id The ID of the appointment.
+     * @throws EntityNotFoundException If the appointment is not found.
+     */
+    @Override
+    public void startStop(long id) {
+        Appointment appointment = appointmentRepository.findById(id).orElseThrow(()->new EntityNotFoundException("RDV pas trouvé"));
+        if (appointment.getStart().equals(null)) appointment.setStart(LocalTime.now());
+        else appointment.setEnd(LocalTime.now());
+        appointmentRepository.save(appointment);
     }
 }
