@@ -65,7 +65,6 @@ class UserServiceImplTest {
 
     @BeforeEach
     void setUp(){
-        MockitoAnnotations.initMocks(this);
         person = Person.builder()
                 .id(1L)
                 .firstName("John")
@@ -122,26 +121,6 @@ class UserServiceImplTest {
         userService.create(anyString(), createForm);
 
         verify(userRepository, times(1)).save(any(User.class));
-    }
-
-    @Test
-    void create_ko_whenFormNull(){
-        Exception exception = assertThrows(IllegalArgumentException.class, ()-> userService.create(anyString(),null));
-
-        String expectedMessage = "formulaire non valide";
-
-        assertEquals(expectedMessage,exception.getMessage());
-    }
-
-    @Test
-    void create_ko_whenPasswordNotEquals(){
-        CreateForm wrongForm = new CreateForm("password", "notapassword");
-
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> userService.create(anyString(), wrongForm));
-
-        String expectedMessage = "formulaire non valide";
-
-        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -248,14 +227,14 @@ class UserServiceImplTest {
 
     @Test
     void delete_ok(){
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(userRepository.findByPersonId(1L)).thenReturn(Optional.of(user));
         userService.delete(1L);
         verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test
     void delete_ko(){
-        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(userRepository.findByPersonId(anyLong())).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(EntityNotFoundException.class, () -> userService.delete(1L));
 

@@ -1,7 +1,11 @@
 package be.yapock.caninecompanion.bll.serviceImpls;
 
+import be.yapock.caninecompanion.dal.models.Breed;
 import be.yapock.caninecompanion.dal.models.Dog;
+import be.yapock.caninecompanion.dal.models.Person;
+import be.yapock.caninecompanion.dal.repositories.BreedRepository;
 import be.yapock.caninecompanion.dal.repositories.DogRepository;
+import be.yapock.caninecompanion.dal.repositories.PersonRepository;
 import be.yapock.caninecompanion.pl.models.dog.DogCreateForm;
 import be.yapock.caninecompanion.pl.models.dog.DogUpdateForm;
 import jakarta.persistence.EntityNotFoundException;
@@ -27,6 +31,10 @@ import static org.mockito.Mockito.*;
 class DogServiceImplTest {
     @Mock
     private DogRepository dogRepository;
+    @Mock
+    private BreedRepository breedRepository;
+    @Mock
+    private PersonRepository personRepository;
     @InjectMocks
     private DogServiceImpl dogService;
 
@@ -34,6 +42,8 @@ class DogServiceImplTest {
     private Dog dog;
     private DogSearchForm searchForm;
     private DogUpdateForm updateForm;
+    private Breed breed;
+    private Person person;
 
     @BeforeEach
     void setUp(){
@@ -47,11 +57,16 @@ class DogServiceImplTest {
                 .build();
         updateForm= new DogUpdateForm(dog.getFirstName(),dog.getLastName(),dog.getDateOfBirth(),dog.getSex(),dog.isSterilized());
         searchForm= new DogSearchForm("");
+        person = new Person();
+        breed= new Breed();
     }
 
     @Test
     void create_ok() {
+        when(breedRepository.findById(anyLong())).thenReturn(Optional.of(breed));
+        when(personRepository.findById(anyLong())). thenReturn(Optional.of(person));
         when(dogRepository.save(any(Dog.class))).thenReturn(dog);
+
 
         dogService.create(createForm);
 

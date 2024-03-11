@@ -22,9 +22,8 @@ spring:
         smtp:
           auth: true
           starttls.enable: true
-server:
-  port: 8081
 
 
 api:
   data-init: ${DATA_INIT}
+  cors: ${CORS}
