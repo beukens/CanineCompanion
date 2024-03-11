@@ -30,6 +30,7 @@ public class DiagnosticServiceImpl implements DiagnosticService {
      */
     @Override
     public void create(DiagnosticForm form) {
+        if (form==null) throw new IllegalArgumentException("Form ne peut être null");
         Diagnostic diagnostic = Diagnostic.builder()
                 .date(LocalDate.now())
                 .submissivePosition(form.submissivePosition())

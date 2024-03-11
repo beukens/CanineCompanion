@@ -6,15 +6,22 @@ import be.yapock.caninecompanion.dal.repositories.DiagnosticRepository;
 import be.yapock.caninecompanion.dal.repositories.DogRepository;
 import be.yapock.caninecompanion.pl.models.diagnostic.DiagnosticDTO;
 import be.yapock.caninecompanion.pl.models.diagnostic.DiagnosticForm;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class DiagnosticServiceImplTest {
     @Mock
@@ -31,6 +38,7 @@ class DiagnosticServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        dog = Dog.builder().id(1L).build();
         diagnostic = Diagnostic.builder()
                 .dog(dog)
                 .tenderness(1)
@@ -57,5 +65,26 @@ class DiagnosticServiceImplTest {
                 .submissivePosition(5)
                 .build();
         form = new DiagnosticForm(diagnostic.getSubmissivePosition(),diagnostic.getWithFamiliarHuman(), diagnostic.getWithStranger(), diagnostic.getWithDogs(), diagnostic.getWithOtherAnimals(), diagnostic.getStayingAlone(), diagnostic.getAffrayed(), diagnostic.getContactWHumans(), diagnostic.getContactWAnimals(), diagnostic.getAdaptability(), diagnostic.getAttachement(), diagnostic.getSeparation(), diagnostic.getRestPlace(), diagnostic.getAffrayed(), diagnostic.getAttachement(), diagnostic.getContactWHumans(),diagnostic.getJumpOnPeople(), diagnostic.getDestruct(),diagnostic.getScratchesBruises(), diagnostic.getExcitation(),diagnostic.getId());
+    }
+
+    @Test
+    void create_ok(){
+        when(dogRepository.findById(anyLong())).thenReturn(Optional.of(dog));
+        when(diagnosticRepository.save(any(Diagnostic.class))).thenReturn(diagnostic);
+        diagnosticService.create(form);
+        verify(diagnosticRepository, times(1)).save(any(Diagnostic.class));
+    }
+
+    @Test
+    void create_ko_formNull(){
+        Exception exception = assertThrows(IllegalArgumentException.class, ()-> diagnosticService.create(null));
+        assertEquals("Form ne peut être null", exception.getMessage());
+    }
+
+    @Test
+    void create_ko_dogNotFound(){
+        when(dogRepository.findById(anyLong())).thenReturn(Optional.empty());
+        Exception exception = assertThrows(EntityNotFoundException.class, ()->diagnosticService.create(form));
+        assertEquals("pas trouvé le woof woof", exception.getMessage());
     }
 }
