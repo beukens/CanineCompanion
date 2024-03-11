@@ -10,4 +10,5 @@ public interface DiagnosticService {
     void create(DiagnosticForm form);
     Diagnostic getOne(long id);
     List<Diagnostic> getAllByDog(long id);
+    void delete(long id);
 }
