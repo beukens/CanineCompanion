@@ -38,12 +38,13 @@ public class AppointmentServiceImpl implements AppointmentService {
      * @param form The appointment form containing the necessary data.
      */
     public void create(AppointmentForm form){
+        if (form == null) throw new IllegalArgumentException("Form ne peut être null");
         Appointment appointment = Appointment.builder()
                 .schedulded(form.scheduled())
                 .comment(form.comment())
                 .dogs(dogRepository.findAllById(form.dogIds()))
                 .build();
-        Person owner = appointment.getDogs().getFirst().getOwner();
+        Person owner = appointment.getDogs().get(0).getOwner();
         appointment.setOwner(owner);
         appointment.setFirstMeeting(appointmentRepository.findAllByOwner_Id(owner.getId()).isEmpty());
         appointmentRepository.save(appointment);
@@ -93,7 +94,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public void startStop(long id) {
         Appointment appointment = appointmentRepository.findById(id).orElseThrow(()->new EntityNotFoundException("RDV pas trouvé"));
-        if (appointment.getStart().equals(null)) appointment.setStart(LocalTime.now());
+        if (appointment.getStart()==null) appointment.setStart(LocalTime.now());
         else appointment.setEnd(LocalTime.now());
         appointmentRepository.save(appointment);
     }
