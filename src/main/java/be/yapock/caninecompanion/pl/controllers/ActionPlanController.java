@@ -4,6 +4,8 @@ import be.yapock.caninecompanion.bll.ActionPlanService;
 import be.yapock.caninecompanion.pl.models.actionPlan.ActionPlanForm;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import be.yapock.caninecompanion.pl.models.actionPlan.ActionPlanUpdateForm;
@@ -37,5 +39,15 @@ public class ActionPlanController {
     @PutMapping("/{id}")
     public void update(@PathVariable long id, @RequestBody ActionPlanUpdateForm form){
         actionPlanService.update(id, form);
+    }
+
+    /**
+     * Deletes an action plan based on the provided ID.
+     *
+     * @param id The ID of the action plan to be deleted.
+     */
+    @DeleteMapping("/{id}")
+    public void deleteActionPlan(@PathVariable long id) {
+        actionPlanService.delete(id);
     }
 }

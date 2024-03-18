@@ -62,4 +62,14 @@ public class ActionPlanServiceImpl implements ActionPlanService {
         actionPlan.setExercices(exerciceRepository.findAllById(form.exercicesId()));
         actionPlanRepository.save(actionPlan);
     }
+
+    /**
+     * Deletes an ActionPlan entity by its ID.
+     *
+     * @param id the ID of the ActionPlan entity to be deleted
+     */
+    @Override
+    public void delete(long id) {
+        actionPlanRepository.deleteById(id);
+    }
 }
