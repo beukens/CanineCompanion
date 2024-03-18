@@ -2,14 +2,9 @@ package be.yapock.caninecompanion.pl.controllers;
 
 import be.yapock.caninecompanion.bll.ExerciceService;
 import be.yapock.caninecompanion.pl.models.exercice.ExerciceCreateForm;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import be.yapock.caninecompanion.pl.models.exercice.ExerciceFullDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/exercice")
@@ -39,5 +34,15 @@ public class ExerciceController {
     @GetMapping("/{id}")
     public ResponseEntity<ExerciceFullDTO> getOne(@PathVariable long id){
         return ResponseEntity.ok(ExerciceFullDTO.fromEntity(exerciceService.getOneById(id)));
+    }
+
+    /**
+     * Deletes an exercise by its ID.
+     *
+     * @param id The ID of the exercise to delete.
+     */
+    @DeleteMapping("/{id}")
+    public void deleteExercice(@PathVariable long id) {
+        exerciceService.delete(id);
     }
 }

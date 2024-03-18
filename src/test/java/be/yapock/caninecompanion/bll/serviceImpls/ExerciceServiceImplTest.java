@@ -63,4 +63,10 @@ class ExerciceServiceImplTest {
         Exception exception = assertThrows(EntityNotFoundException.class, ()-> exerciceService.getOneById(anyLong()));
         assertEquals("Exercice pas trouvé", exception.getMessage());
     }
+
+    @Test
+    void delete(){
+        exerciceService.delete(anyLong());
+        verify(exerciceRepository, times(1)).deleteById(anyLong());
+    }
 }

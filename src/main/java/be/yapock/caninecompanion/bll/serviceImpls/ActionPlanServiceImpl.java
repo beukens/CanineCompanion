@@ -82,4 +82,5 @@ public class ActionPlanServiceImpl implements ActionPlanService {
     public ActionPlan getOneById(long id) {
         return actionPlanRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Plan d'action pas trouvé"));
     }
+
 }

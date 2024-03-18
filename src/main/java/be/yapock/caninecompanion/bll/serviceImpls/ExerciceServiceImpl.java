@@ -44,4 +44,15 @@ public class ExerciceServiceImpl implements ExerciceService {
     public Exercice getOneById(long id) {
         return exerciceRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Exercice pas trouvé"));
     }
+
+    /**
+     * Deletes an Exercice by its id.
+     *
+     * @param id the id of the Exercice to delete
+     * @throws IllegalArgumentException if the id is not valid
+     */
+    @Override
+    public void delete(long id) {
+        exerciceRepository.deleteById(id);
+    }
 }

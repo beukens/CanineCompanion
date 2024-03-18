@@ -7,4 +7,5 @@ import be.yapock.caninecompanion.dal.models.Exercice;
 public interface ExerciceService {
     void create(ExerciceCreateForm form);
     Exercice getOneById(long id);
+    void delete(long id);
 }
