@@ -29,6 +29,6 @@ public class Appointment {
     private Person owner;
 
     public List<Dog> getDogs() {
-        return dogs;
+        return List.copyOf(dogs);
     }
 }
