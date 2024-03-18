@@ -55,7 +55,7 @@ public class ActionPlanServiceImpl implements ActionPlanService {
      */
     @Override
     public void update(long id, ActionPlanUpdateForm form) {
-        if (form== null) throw new IllegalArgumentException("Form ne peut être vide");
+        if (form== null) throw new IllegalArgumentException("Form ne peut être null");
         ActionPlan actionPlan = actionPlanRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Plan d'action pas trouvé"));
         actionPlan.setExercices(exerciceRepository.findAllById(form.exercicesId()));
         actionPlanRepository.save(actionPlan);
