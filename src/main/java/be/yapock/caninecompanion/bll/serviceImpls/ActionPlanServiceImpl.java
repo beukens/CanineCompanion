@@ -20,10 +20,8 @@ public class ActionPlanServiceImpl implements ActionPlanService {
     private final ActionPlanRepository actionPlanRepository;
     private final DogRepository dogRepository;
     private final ExerciceRepository exerciceRepository;
-    private final ExerciceRepository exerciceRepository;
 
     public ActionPlanServiceImpl(ActionPlanRepository actionPlanRepository, DogRepository dogRepository, ExerciceRepository exerciceRepository) {
-    public ActionPlanServiceImpl(ActionPlanRepository actionPlanRepository, ExerciceRepository exerciceRepository) {
         this.actionPlanRepository = actionPlanRepository;
         this.dogRepository = dogRepository;
         this.exerciceRepository = exerciceRepository;
@@ -45,7 +43,6 @@ public class ActionPlanServiceImpl implements ActionPlanService {
                 .exercices(exerciceRepository.findAllById(form.exercicesId()))
                 .build();
         actionPlanRepository.save(actionPlan);
-        this.exerciceRepository = exerciceRepository;
     }
 
     /**
