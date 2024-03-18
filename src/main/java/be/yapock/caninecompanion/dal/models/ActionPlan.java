@@ -22,6 +22,7 @@ public class ActionPlan {
     @JoinColumn(name = "dog_id")
     private Dog dog;
     @OneToMany
+    @Setter
     private List<Exercice> exercices;
 
     public List<Exercice> getExercices() {
