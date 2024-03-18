@@ -27,4 +27,8 @@ public class Appointment {
     @OneToOne
     @JoinColumn(name = "owner_id")
     private Person owner;
+
+    public List<Dog> getDogs() {
+        return dogs;
+    }
 }

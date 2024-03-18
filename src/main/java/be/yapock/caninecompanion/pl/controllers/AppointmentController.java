@@ -58,6 +58,7 @@ public class AppointmentController {
      *
      * @param form the appointment form containing the details of the appointment
      */
+    @PostMapping
     public void create(AppointmentForm form){
         appointmentService.create(form);
     }
@@ -78,7 +79,7 @@ public class AppointmentController {
      *
      * @param id the ID of the appointment to start or stop
      */
-    @PostMapping("/{id}/startStop")
+    @GetMapping("/{id}/startStop")
     public void startStopAppointment(@PathVariable long id) {
         appointmentService.startStop(id);
     }
