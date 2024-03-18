@@ -1,14 +1,43 @@
 package be.yapock.caninecompanion.bll.serviceImpls;
 
 import be.yapock.caninecompanion.bll.ActionPlanService;
+import be.yapock.caninecompanion.dal.models.ActionPlan;
 import be.yapock.caninecompanion.dal.repositories.ActionPlanRepository;
+import be.yapock.caninecompanion.dal.repositories.DogRepository;
+import be.yapock.caninecompanion.dal.repositories.ExerciceRepository;
+import be.yapock.caninecompanion.pl.models.actionPlan.ActionPlanForm;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 @Service
 public class ActionPlanServiceImpl implements ActionPlanService {
     private final ActionPlanRepository actionPlanRepository;
+    private final DogRepository dogRepository;
+    private final ExerciceRepository exerciceRepository;
 
-    public ActionPlanServiceImpl(ActionPlanRepository actionPlanRepository) {
+    public ActionPlanServiceImpl(ActionPlanRepository actionPlanRepository, DogRepository dogRepository, ExerciceRepository exerciceRepository) {
         this.actionPlanRepository = actionPlanRepository;
+        this.dogRepository = dogRepository;
+        this.exerciceRepository = exerciceRepository;
+    }
+
+    /**
+     * Creates a new action plan based on the given form.
+     *
+     * @param form the action plan form containing the necessary data for creating the action plan
+     * @throws IllegalArgumentException if the form is null
+     * @throws EntityNotFoundException if the dog is not found in the dog repository
+     */
+    @Override
+    public void create(ActionPlanForm form) {
+        if (form==null) throw new IllegalArgumentException("Form ne peut être null");
+        ActionPlan actionPlan = ActionPlan.builder()
+                .date(LocalDate.now())
+                .dog(dogRepository.findById(form.dogId()).orElseThrow(()-> new EntityNotFoundException("Chien pas trouvé")))
+                .exercices(exerciceRepository.findAllById(form.exercicesId()))
+                .build();
+        actionPlanRepository.save(actionPlan);
     }
 }

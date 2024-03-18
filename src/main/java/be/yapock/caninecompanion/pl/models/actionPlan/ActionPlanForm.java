@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record ActionPlanForm(
-        LocalDate date,
+        long dogId,
         List<Long> exercicesId
 ) {
 }
