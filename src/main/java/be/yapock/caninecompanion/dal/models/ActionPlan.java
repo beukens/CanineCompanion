@@ -29,4 +29,8 @@ public class ActionPlan {
     public List<Exercice> getExercices() {
         return List.copyOf(exercices);
     }
+
+    public void addExercices(Exercice exo) {
+        this.exercices.add(exo);
+    }
 }

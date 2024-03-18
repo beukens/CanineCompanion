@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import be.yapock.caninecompanion.pl.models.actionPlan.ActionPlanUpdateForm;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/actionplan")
 public class ActionPlanController {
@@ -64,5 +67,18 @@ public class ActionPlanController {
     @GetMapping("/{id}")
     public ResponseEntity<ActionPlanDTO> getOneById(@PathVariable long id) {
         return ResponseEntity.ok(ActionPlanDTO.fromEntity(actionPlanService.getOneById(id)));
+    }
+
+    /**
+     * Retrieves a list of ActionPlanDTO objects representing all action plans associated with a dog.
+     *
+     * @param id The ID of the dog.
+     * @return A ResponseEntity containing a list of ActionPlanDTO objects.
+     */
+    @GetMapping("/dog/{id}")
+    public ResponseEntity<List<ActionPlanDTO>> getAllByDog(@PathVariable long id) {
+        return ResponseEntity.ok(actionPlanService.getAllByDog(id).stream()
+                .map(ActionPlanDTO::fromEntity)
+                .collect(Collectors.toList()));
     }
 }

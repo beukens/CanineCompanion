@@ -22,5 +22,5 @@ public class Exercice {
     private double frequencies;
     @Setter
     private boolean isDone;
-    private LocalDateTime doneDate;
+    private LocalDate doneDate;
 }

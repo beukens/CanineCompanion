@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -121,5 +122,12 @@ class ActionPlanServiceImplTest {
         when(actionPlanRepository.findById(anyLong())).thenReturn(Optional.empty());
         Exception exception = assertThrows(EntityNotFoundException.class, () -> actionPlanService.getOneById(anyLong()));
         assertEquals("Plan d'action pas trouvé", exception.getMessage());
+    }
+
+    @Test
+    void getAllByDog_ok(){
+        when(actionPlanRepository.findAllByDog_Id(anyLong())).thenReturn(Collections.singletonList(actionPlan));
+        List<ActionPlan> result = actionPlanService.getAllByDog(anyLong());
+        assertEquals(result, Collections.singletonList(actionPlan));
     }
 }
