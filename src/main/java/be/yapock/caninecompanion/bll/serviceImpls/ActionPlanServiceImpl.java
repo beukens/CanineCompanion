@@ -22,7 +22,7 @@ public class ActionPlanServiceImpl implements ActionPlanService {
      * @throws EntityNotFoundException if no ActionPlan with the specified ID exists.
      */
     @Override
-    public ActionPlan getOneById(Long id) {
+    public ActionPlan getOneById(long id) {
         return actionPlanRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Plan d'action pas trouvé"));
     }
 }
