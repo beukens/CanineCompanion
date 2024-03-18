@@ -3,6 +3,7 @@ package be.yapock.caninecompanion.dal.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,4 +22,5 @@ public class Exercice {
     private double frequencies;
     @Setter
     private boolean isDone;
+    private LocalDateTime doneDate;
 }

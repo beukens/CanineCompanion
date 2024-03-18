@@ -16,9 +16,10 @@ public class ActionPlan {
     private Long id;
 
     private LocalDate date;
+    private LocalDate endDate;
 
     @Setter
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "dog_id")
     private Dog dog;
     @OneToMany
