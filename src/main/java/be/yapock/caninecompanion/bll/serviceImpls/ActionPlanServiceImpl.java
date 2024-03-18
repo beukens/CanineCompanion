@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import be.yapock.caninecompanion.dal.repositories.ExerciceRepository;
 import be.yapock.caninecompanion.pl.models.actionPlan.ActionPlanUpdateForm;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -71,5 +72,17 @@ public class ActionPlanServiceImpl implements ActionPlanService {
     @Override
     public void delete(long id) {
         actionPlanRepository.deleteById(id);
+    }
+
+    /**
+     * Retrieves a specific ActionPlan object by its ID.
+     *
+     * @param id The ID of the ActionPlan to retrieve.
+     * @return The ActionPlan object with the specified ID.
+     * @throws EntityNotFoundException if no ActionPlan with the specified ID exists.
+     */
+    @Override
+    public ActionPlan getOneById(long id) {
+        return actionPlanRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Plan d'action pas trouvé"));
     }
 }

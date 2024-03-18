@@ -6,6 +6,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import be.yapock.caninecompanion.pl.models.actionPlan.ActionPlanDTO;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import be.yapock.caninecompanion.pl.models.actionPlan.ActionPlanUpdateForm;
@@ -49,5 +53,16 @@ public class ActionPlanController {
     @DeleteMapping("/{id}")
     public void deleteActionPlan(@PathVariable long id) {
         actionPlanService.delete(id);
+    }
+
+    /**
+     * Retrieves an Action Plan by its ID.
+     *
+     * @param id the ID of the Action Plan
+     * @return a ResponseEntity containing the ActionPlanDTO representation of the retrieved Action Plan
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<ActionPlanDTO> getOneById(@PathVariable long id) {
+        return ResponseEntity.ok(ActionPlanDTO.fromEntity(actionPlanService.getOneById(id)));
     }
 }
