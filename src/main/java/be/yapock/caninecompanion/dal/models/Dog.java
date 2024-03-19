@@ -29,4 +29,8 @@ public class Dog {
     @Setter
     @JoinColumn(name = "breed_id")
     private Breed breed;
+    @Setter
+    @OneToOne
+    @JoinColumn(name = "morphology_id")
+    private Morphology morphology;
 }

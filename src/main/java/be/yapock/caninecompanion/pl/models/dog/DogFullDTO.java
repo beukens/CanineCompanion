@@ -1,6 +1,7 @@
 package be.yapock.caninecompanion.pl.models.dog;
 
 import be.yapock.caninecompanion.dal.models.Dog;
+import be.yapock.caninecompanion.pl.models.morphology.MorphologyDto;
 
 import java.time.LocalDate;
 
@@ -10,7 +11,8 @@ public record DogFullDTO(
         LocalDate dateOfBirth,
         String sexe,
         boolean isSterilized,
-        long breedId
+        long breedId,
+        MorphologyDto morphology
 ) {
     public static DogFullDTO fromEntity(Dog dog){
         return new DogFullDTO(
@@ -19,7 +21,8 @@ public record DogFullDTO(
                 dog.getDateOfBirth(),
                 dog.getSex(),
                 dog.isSterilized(),
-                dog.getBreed().getId()
+                dog.getBreed().getId(),
+                MorphologyDto.fromEntity(dog.getMorphology())
         );
     }
 }
