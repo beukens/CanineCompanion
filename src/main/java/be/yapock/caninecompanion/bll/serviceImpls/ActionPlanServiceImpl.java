@@ -7,6 +7,7 @@ import be.yapock.caninecompanion.dal.repositories.ActionPlanRepository;
 import be.yapock.caninecompanion.dal.repositories.DogRepository;
 import be.yapock.caninecompanion.dal.repositories.ExerciceRepository;
 import be.yapock.caninecompanion.pl.models.actionPlan.ActionPlanForm;
+import be.yapock.caninecompanion.pl.models.exercice.ExerciceCreateForm;
 import jakarta.persistence.EntityNotFoundException;
 import be.yapock.caninecompanion.pl.models.actionPlan.ActionPlanUpdateForm;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -43,8 +44,14 @@ public class ActionPlanServiceImpl implements ActionPlanService {
                 .date(LocalDate.now())
                 .endDate(LocalDate.now().plusMonths(1))
                 .dog(dogRepository.findById(form.dogId()).orElseThrow(()-> new EntityNotFoundException("Chien pas trouvé")))
-                .exercices(exerciceRepository.findAllById(form.exercicesId()))
                 .build();
+        form.exercices().forEach(e -> {
+            Exercice exo;
+            if (exerciceRepository.existsByNameEqualsIgnoreCaseAndDescriptionEqualsIgnoreCase(e.name(),e.description())) exo = exerciceRepository.findByNameEqualsIgnoreCaseAndDescriptionEqualsIgnoreCase(e.name(), e.description());
+            else exo = ExerciceCreateForm.toEntity(e);
+            actionPlan.addExercices(exo);
+            exerciceRepository.save(exo);
+        });
         actionPlanRepository.save(actionPlan);
     }
 
