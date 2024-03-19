@@ -4,6 +4,7 @@ import be.yapock.caninecompanion.dal.models.Dog;
 import be.yapock.caninecompanion.pl.models.breed.BreedDTO;
 import be.yapock.caninecompanion.pl.models.person.PersonShortDTO;
 import be.yapock.caninecompanion.pl.models.weight.WeightAllDTO;
+import be.yapock.caninecompanion.pl.models.morphology.MorphologyDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,6 +19,8 @@ public record DogFullDTO(
         BreedDTO breed,
         PersonShortDTO owner,
         List<WeightAllDTO> weighthistory
+        long breedId,
+        MorphologyDto morphology
 ) {
     public static DogFullDTO fromEntity(Dog dog){
         return new DogFullDTO(
@@ -31,7 +34,9 @@ public record DogFullDTO(
                 PersonShortDTO.fromEntity(dog.getOwner()),
                 dog.getWeights().stream()
                         .map(WeightAllDTO::fromEntity)
-                        .toList()
+                        .toList(),
+                dog.getBreed().getId(),
+                MorphologyDto.fromEntity(dog.getMorphology())
         );
     }
 }

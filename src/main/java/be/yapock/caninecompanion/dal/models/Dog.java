@@ -36,4 +36,8 @@ public class Dog {
     @OneToMany(mappedBy = "dog", cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Weight> weights = new ArrayList<>();
+    @Setter
+    @OneToOne
+    @JoinColumn(name = "morphology_id")
+    private Morphology morphology;
 }
