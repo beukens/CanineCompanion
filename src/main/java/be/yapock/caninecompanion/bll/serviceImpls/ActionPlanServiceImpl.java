@@ -41,6 +41,7 @@ public class ActionPlanServiceImpl implements ActionPlanService {
         if (form==null) throw new IllegalArgumentException("Form ne peut être null");
         ActionPlan actionPlan = ActionPlan.builder()
                 .date(LocalDate.now())
+                .endDate(LocalDate.now().plusMonths(1))
                 .dog(dogRepository.findById(form.dogId()).orElseThrow(()-> new EntityNotFoundException("Chien pas trouvé")))
                 .exercices(exerciceRepository.findAllById(form.exercicesId()))
                 .build();
@@ -115,7 +116,7 @@ public class ActionPlanServiceImpl implements ActionPlanService {
      *
      * @throws none
      */
-    @Scheduled(cron = "0 1 * * *", zone = "UTC")
+    @Scheduled(cron = "0 1 * * * *", zone = "UTC")
     public void resetExercices(){
         List<Exercice> exercicesToCopy = new ArrayList<>();
         List<ActionPlan> actionPlans = actionPlanRepository.findAllByEndDateAfter(LocalDate.now());

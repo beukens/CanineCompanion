@@ -11,6 +11,7 @@ public record BreedDTO(
         DogSize size,
         String temperament) {
     public static BreedDTO fromEntity(Breed breed){
-        return new BreedDTO(breed.getId(), breed.getName(), breed.getRaceGroup(),breed.getSize(), breed.getTemperament());
+        if (breed!=null) return new BreedDTO(breed.getId(), breed.getName(), breed.getRaceGroup(),breed.getSize(), breed.getTemperament());
+        else return null;
     }
 }
