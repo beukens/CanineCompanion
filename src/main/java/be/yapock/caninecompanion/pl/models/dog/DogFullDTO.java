@@ -18,8 +18,7 @@ public record DogFullDTO(
         boolean isSterilized,
         BreedDTO breed,
         PersonShortDTO owner,
-        List<WeightAllDTO> weighthistory
-        long breedId,
+        List<WeightAllDTO> weighthistory,
         MorphologyDto morphology
 ) {
     public static DogFullDTO fromEntity(Dog dog){
@@ -35,7 +34,6 @@ public record DogFullDTO(
                 dog.getWeights().stream()
                         .map(WeightAllDTO::fromEntity)
                         .toList(),
-                dog.getBreed().getId(),
                 MorphologyDto.fromEntity(dog.getMorphology())
         );
     }

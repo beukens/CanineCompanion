@@ -32,9 +32,8 @@ class ExerciceServiceImplTest {
         exercice = Exercice.builder()
                 .name("Test Exercice")
                 .description("Test Description")
-                .frequencies(2.5)
                 .build();
-        form = new ExerciceCreateForm("Test Exercice", "Test Description", 2.5);
+        form = new ExerciceCreateForm("Test Exercice", "Test Description");
     }
 
     @Test

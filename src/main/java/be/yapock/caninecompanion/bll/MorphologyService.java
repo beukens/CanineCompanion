@@ -5,6 +5,6 @@ import be.yapock.caninecompanion.pl.models.morphology.MorphologyForm;
 
 public interface MorphologyService {
     Morphology getOne(long id);
-    void create(MorphologyForm form);
+    long create(MorphologyForm form);
     void delete(long id);
 }

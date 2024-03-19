@@ -27,7 +27,6 @@ public class ExerciceServiceImpl implements ExerciceService {
         Exercice exercice = Exercice.builder()
                 .name(form.name())
                 .description(form.description())
-                .frequencies(form.frequencies())
                 .isDone(false)
                 .build();
         exerciceRepository.save(exercice);

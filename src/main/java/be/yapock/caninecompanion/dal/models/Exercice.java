@@ -19,8 +19,6 @@ public class Exercice {
     @Setter
     private String description;
     @Setter
-    private double frequencies;
-    @Setter
     private boolean isDone;
     private LocalDate doneDate;
 }

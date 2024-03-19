@@ -15,7 +15,8 @@ public record MorphologyDto(
         List<BreedDTO> breeds
 ) {
     public static MorphologyDto fromEntity(Morphology morphology){
-        return new MorphologyDto(
+        if (morphology != null)
+            return new MorphologyDto(
                 morphology.getCoat(),
                 morphology.getHeight(),
                 morphology.getChestPerimeter(),
@@ -25,6 +26,7 @@ public record MorphologyDto(
                 morphology.getBreeds().stream()
                         .map(BreedDTO::fromEntity)
                         .toList()
-        );
+            );
+        else return null;
     }
 }

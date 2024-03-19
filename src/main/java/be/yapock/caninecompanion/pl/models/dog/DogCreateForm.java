@@ -15,6 +15,7 @@ public record DogCreateForm(
         String sex,
         boolean isSterilized,
         long breedId,
-        long ownerId
+        long ownerId,
+        long morphologyId
 ) {
 }

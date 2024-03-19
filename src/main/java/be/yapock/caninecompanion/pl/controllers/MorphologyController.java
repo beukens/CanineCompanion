@@ -21,8 +21,9 @@ public class MorphologyController {
      * @param form The MorphologyForm object containing the details of the new record.
      */
     @PostMapping
-    public void create(@RequestBody MorphologyForm form){
-        morphologyService.create(form);
+    public ResponseEntity<Long> create(@RequestBody MorphologyForm form){
+        return ResponseEntity.ok(morphologyService.create(form));
+
     }
 
     /**

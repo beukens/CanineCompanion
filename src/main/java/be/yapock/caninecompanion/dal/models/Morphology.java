@@ -24,7 +24,7 @@ public class Morphology {
     private String headMorphology;
     @Setter
     private String notes;
-    @OneToMany
+    @ManyToMany
     @Setter
     private List<Breed> breeds;
     @Setter

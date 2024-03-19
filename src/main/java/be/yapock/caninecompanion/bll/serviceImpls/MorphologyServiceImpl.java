@@ -42,7 +42,7 @@ public class MorphologyServiceImpl implements MorphologyService {
      * @throws EntityNotFoundException If the Dog with the specified ID in the form is not found.
      */
     @Override
-    public void create(MorphologyForm form) {
+    public long create(MorphologyForm form) {
         if (form==null) throw new IllegalArgumentException("Form ne peut être null");
         Morphology morphology = Morphology.builder()
                 .coat(form.coat())
@@ -52,9 +52,8 @@ public class MorphologyServiceImpl implements MorphologyService {
                 .headMorphology(form.headMorphology())
                 .notes(form.notes())
                 .breeds(breedRepository.findAllById(form.breedId()))
-                .dog(dogRepository.findById(form.dogId()).orElseThrow(()->new EntityNotFoundException("Chien pas trouvé")))
                 .build();
-        morphologyRepository.save(morphology);
+        return morphologyRepository.save(morphology).getId();
     }
 
     /**

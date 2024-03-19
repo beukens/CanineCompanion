@@ -1,11 +1,9 @@
 package be.yapock.caninecompanion.bll.serviceImpls;
 
 import be.yapock.caninecompanion.bll.DogService;
+import be.yapock.caninecompanion.bll.MorphologyService;
 import be.yapock.caninecompanion.dal.models.Dog;
-import be.yapock.caninecompanion.dal.repositories.BreedRepository;
-import be.yapock.caninecompanion.dal.repositories.DogRepository;
-import be.yapock.caninecompanion.dal.repositories.PersonRepository;
-import be.yapock.caninecompanion.dal.repositories.SpecificationBuilder;
+import be.yapock.caninecompanion.dal.repositories.*;
 import be.yapock.caninecompanion.pl.models.dog.DogCreateForm;
 import be.yapock.caninecompanion.pl.models.dog.DogUpdateForm;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,11 +17,13 @@ public class DogServiceImpl implements DogService {
     private final DogRepository dogRepository;
     private final BreedRepository breedRepository;
     private final PersonRepository personRepository;
+    private final MorphologyRepository morphologyRepository;
 
-    public DogServiceImpl(DogRepository dogRepository, BreedRepository breedRepository, PersonRepository personRepository) {
+    public DogServiceImpl(DogRepository dogRepository, BreedRepository breedRepository, PersonRepository personRepository, MorphologyRepository morphologyRepository) {
         this.dogRepository = dogRepository;
         this.breedRepository = breedRepository;
         this.personRepository = personRepository;
+        this.morphologyRepository = morphologyRepository;
     }
 
     /**
@@ -35,15 +35,17 @@ public class DogServiceImpl implements DogService {
     @Override
     public void create(DogCreateForm form) {
         if (form==null) throw new IllegalArgumentException("Le formulaire ne peut être vide");
+        if (form.breedId()== 0 && form.morphologyId() == 0) throw new IllegalArgumentException("Le chien doit avoir une race ou un examen morpho");
         Dog dog = Dog.builder()
                 .firstName(form.firstName())
                 .lastName(form.lastName())
                 .isSterilized(form.isSterilized())
                 .dateOfBirth(form.dateOfBirth())
                 .sex(form.sex())
-                .breed(breedRepository.findById(form.breedId()).orElseThrow(()-> new EntityNotFoundException("race non trouvée")))
                 .owner(personRepository.findById(form.ownerId()).orElseThrow(()-> new EntityNotFoundException("Personne pas trouvée")))
                 .build();
+        if (form.breedId()!=0) dog.setBreed(breedRepository.findById(form.breedId()).orElseThrow(()-> new EntityNotFoundException("race non trouvée")));
+        else dog.setMorphology(morphologyRepository.findById(form.morphologyId()).orElseThrow(()-> new EntityNotFoundException("examen morpho pas trouvé")));
         dogRepository.save(dog);
     }
 
