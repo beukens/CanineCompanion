@@ -14,5 +14,6 @@ public interface ActionPlanService {
     void update(long id, ActionPlanUpdateForm form);
     void delete(long id);
     ActionPlan getOneById(long id);
+    ActionPlan getLastByDogId(long id);
     List<ActionPlan> getAllByDog(long id);
 }

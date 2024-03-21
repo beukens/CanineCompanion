@@ -1,6 +1,7 @@
 package be.yapock.caninecompanion.pl.controllers;
 
 import be.yapock.caninecompanion.bll.ExerciceService;
+import be.yapock.caninecompanion.pl.models.exercice.ExerciceCheckForm;
 import be.yapock.caninecompanion.pl.models.exercice.ExerciceCreateForm;
 import org.springframework.web.bind.annotation.*;
 import be.yapock.caninecompanion.pl.models.exercice.ExerciceFullDTO;
@@ -44,5 +45,16 @@ public class ExerciceController {
     @DeleteMapping("/{id}")
     public void deleteExercice(@PathVariable long id) {
         exerciceService.delete(id);
+    }
+
+    /**
+     * Updates an exercise with the provided ID using the provided exercise check form.
+     *
+     * @param id   The ID of the exercise to update.
+     * @param form The exercise check form containing the updated exercise details.
+     */
+    @PutMapping("/{id}")
+    public void updateExercice(@PathVariable long id, @RequestBody ExerciceCheckForm form) {
+        exerciceService.update(id, form);
     }
 }

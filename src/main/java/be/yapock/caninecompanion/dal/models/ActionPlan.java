@@ -2,6 +2,7 @@ package be.yapock.caninecompanion.dal.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.repository.cdi.Eager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,12 +24,12 @@ public class ActionPlan {
     @ManyToOne
     @JoinColumn(name = "dog_id")
     private Dog dog;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @Setter
     private List<Exercice> exercices;
 
     public List<Exercice> getExercices() {
-        return List.copyOf(exercices);
+        return new ArrayList<>(exercices);
     }
 
     public void addExercices(Exercice exo) {

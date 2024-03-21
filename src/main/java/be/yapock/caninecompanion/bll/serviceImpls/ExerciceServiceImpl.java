@@ -3,6 +3,7 @@ package be.yapock.caninecompanion.bll.serviceImpls;
 import be.yapock.caninecompanion.bll.ExerciceService;
 import be.yapock.caninecompanion.dal.models.Exercice;
 import be.yapock.caninecompanion.dal.repositories.ExerciceRepository;
+import be.yapock.caninecompanion.pl.models.exercice.ExerciceCheckForm;
 import be.yapock.caninecompanion.pl.models.exercice.ExerciceCreateForm;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -53,5 +54,21 @@ public class ExerciceServiceImpl implements ExerciceService {
     @Override
     public void delete(long id) {
         exerciceRepository.deleteById(id);
+    }
+
+    /**
+     * Updates the exercise with the specified id using the provided form.
+     *
+     * @param id   The id of the exercise to update.
+     * @param form The form containing the exercise information. Must not be null.
+     * @throws IllegalArgumentException      If the form is null.
+     * @throws EntityNotFoundException        If no exercise is found with the specified id.
+     */
+    @Override
+    public void update(long id, ExerciceCheckForm form) {
+        if (form == null) throw new IllegalArgumentException("Form ne peut être null");
+        Exercice exercice = exerciceRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Exercice pas trouvé"));
+        exercice.setDone(form.isDone());
+        exerciceRepository.save(exercice);
     }
 }

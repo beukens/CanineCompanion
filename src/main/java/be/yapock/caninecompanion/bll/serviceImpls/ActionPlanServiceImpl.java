@@ -146,4 +146,16 @@ public class ActionPlanServiceImpl implements ActionPlanService {
                 });
         actionPlanRepository.saveAll(actionPlans);
     }
+
+    /**
+     * Retrieves the last action plan associated with a specific dog.
+     *
+     * @param id the ID of the dog
+     * @return the last action plan associated with the specified dog
+     * @throws EntityNotFoundException if no action plan is found for the specified dog
+     */
+    @Override
+    public ActionPlan getLastByDogId(long id) {
+        return actionPlanRepository.findFirstByDog_IdOrderByDateDesc(id).orElseThrow(()->new EntityNotFoundException("Plan d'action pas trouvé"));
+    }
 }

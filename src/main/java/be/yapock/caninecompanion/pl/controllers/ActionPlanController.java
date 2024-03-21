@@ -81,4 +81,9 @@ public class ActionPlanController {
                 .map(ActionPlanDTO::fromEntity)
                 .collect(Collectors.toList()));
     }
+
+    @GetMapping("/dog/last/{id}")
+    public ResponseEntity<ActionPlanDTO> getLastByDogId(@PathVariable long id) {
+        return ResponseEntity.ok(ActionPlanDTO.fromEntity(actionPlanService.getLastByDogId(id)));
+    }
 }
