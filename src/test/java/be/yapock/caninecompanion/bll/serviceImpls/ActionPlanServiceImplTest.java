@@ -8,6 +8,7 @@ import be.yapock.caninecompanion.dal.repositories.DogRepository;
 import be.yapock.caninecompanion.dal.repositories.ExerciceRepository;
 import be.yapock.caninecompanion.pl.models.actionPlan.ActionPlanForm;
 import be.yapock.caninecompanion.pl.models.actionPlan.ActionPlanUpdateForm;
+import be.yapock.caninecompanion.pl.models.exercice.ExerciceCreateForm;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,7 @@ class ActionPlanServiceImplTest {
     private ActionPlanUpdateForm actionPlanUpdateForm;
     private Dog dog;
     private Exercice exercice;
+    private ExerciceCreateForm exerciceCreateForm;
 
     @BeforeEach
     void setUp() {
@@ -50,7 +52,8 @@ class ActionPlanServiceImplTest {
         exercice= Exercice.builder()
                 .id(2L)
                 .build();
-        actionPlanForm = new ActionPlanForm(1L, Collections.singletonList(2L));
+        exerciceCreateForm= new ExerciceCreateForm("name", "description");
+        actionPlanForm = new ActionPlanForm(1L, Collections.singletonList(exerciceCreateForm));
         actionPlan = ActionPlan.builder()
                 .exercices(Collections.singletonList(exercice))
                 .dog(dog)

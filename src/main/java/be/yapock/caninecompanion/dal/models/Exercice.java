@@ -20,5 +20,6 @@ public class Exercice {
     private String description;
     @Setter
     private boolean isDone;
-    private LocalDate doneDate;
+    @Setter
+    private LocalDate date;
 }

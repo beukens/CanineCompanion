@@ -39,6 +39,7 @@ public class ActionPlanServiceImpl implements ActionPlanService {
      */
     @Override
     public void create(ActionPlanForm form) {
+        List<Exercice> exercices = new ArrayList<>();
         if (form==null) throw new IllegalArgumentException("Form ne peut être null");
         ActionPlan actionPlan = ActionPlan.builder()
                 .date(LocalDate.now())
@@ -49,9 +50,11 @@ public class ActionPlanServiceImpl implements ActionPlanService {
             Exercice exo;
             if (exerciceRepository.existsByNameEqualsIgnoreCaseAndDescriptionEqualsIgnoreCase(e.name(),e.description())) exo = exerciceRepository.findByNameEqualsIgnoreCaseAndDescriptionEqualsIgnoreCase(e.name(), e.description());
             else exo = ExerciceCreateForm.toEntity(e);
-            actionPlan.addExercices(exo);
+            exo.setDate(LocalDate.now());
+            exercices.add(exo);
             exerciceRepository.save(exo);
         });
+        actionPlan.setExercices(exercices);
         actionPlanRepository.save(actionPlan);
     }
 
@@ -129,12 +132,13 @@ public class ActionPlanServiceImpl implements ActionPlanService {
         List<ActionPlan> actionPlans = actionPlanRepository.findAllByEndDateAfter(LocalDate.now());
         actionPlans.forEach(e -> {
                     exercicesToCopy.addAll(e.getExercices().stream()
-                            .filter(f -> f.getDoneDate().equals(e.getDate()))
+                            .filter(f -> f.getDate().equals(e.getDate()))
                             .toList());
                     exercicesToCopy.forEach(g -> {
                         Exercice exo = Exercice.builder()
                                 .name(g.getName())
                                 .description(g.getDescription())
+                                .date(LocalDate.now())
                                 .build();
                         exerciceRepository.save(exo);
                         e.addExercices(exo);

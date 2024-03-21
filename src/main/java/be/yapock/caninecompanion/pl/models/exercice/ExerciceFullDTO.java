@@ -9,14 +9,16 @@ public record ExerciceFullDTO(
         long id,
         String name,
         boolean isDone,
-        String description
+        String description,
+        LocalDate date
 ) {
     public static ExerciceFullDTO fromEntity(Exercice exercice){
         return new ExerciceFullDTO(
                 exercice.getId(),
                 exercice.getName(),
                 exercice.isDone(),
-                exercice.getDescription()
+                exercice.getDescription(),
+                exercice.getDate()
         );
     }
 }
