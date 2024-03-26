@@ -47,9 +47,7 @@ public class ActionPlanServiceImpl implements ActionPlanService {
                 .dog(dogRepository.findById(form.dogId()).orElseThrow(()-> new EntityNotFoundException("Chien pas trouvé")))
                 .build();
         form.exercices().forEach(e -> {
-            Exercice exo;
-            if (exerciceRepository.existsByNameEqualsIgnoreCaseAndDescriptionEqualsIgnoreCase(e.name(),e.description())) exo = exerciceRepository.findByNameEqualsIgnoreCaseAndDescriptionEqualsIgnoreCase(e.name(), e.description());
-            else exo = ExerciceCreateForm.toEntity(e);
+            Exercice exo = ExerciceCreateForm.toEntity(e);
             exo.setDate(LocalDate.now());
             exercices.add(exo);
             exerciceRepository.save(exo);
@@ -108,25 +106,10 @@ public class ActionPlanServiceImpl implements ActionPlanService {
     }
 
     /**
-     * This method is scheduled to run daily to reset the exercises in action plans.
-     * It retrieves all action plans that have an end date after today and performs the following steps for each action plan:
-     *  - Check each exercise in the action plan to see if its done date is equal to the action plan's date.
-     *  - If an exercise has its done date equal to the action plan's date, it is added to a list of exercises to be copied.
-     *  - All exercises in the action plan, including the ones to be copied, are added to a list of all exercises for the action plan.
-     *  - The list of all exercises is set as the new list of exercises for the action plan.
-     * Finally, the updated action plans are saved using the action plan repository.
-     *
-     * This method is triggered daily at 01:00 UTC.
-     *
-     * Note: This method is private and cannot be directly accessed from outside the class.
-     *
-     * @Scheduled - Indicates that this method is scheduled to run at specified intervals.
-     *      - cron: Specifies the cron expression for scheduling. In this case, it is set to "0 1 * * *", meaning it will run at 01:00 every day.
-     *      - zone: Specifies the time zone to use for scheduling. In this case, it is set to "UTC".
-     *
-     * @throws none
+     * Reset the exercises by copying the exercises from the active action plans and saving them as new exercises with the current date.
+     * This method is scheduled to run daily at 1 AM UTC.
      */
-    @Scheduled(cron = "0 1 * * * *", zone = "UTC")
+    @Scheduled(cron = "0 0 1 * * ?")
     public void resetExercices(){
         List<Exercice> exercicesToCopy = new ArrayList<>();
         List<ActionPlan> actionPlans = actionPlanRepository.findAllByEndDateAfter(LocalDate.now());
